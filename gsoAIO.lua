@@ -3085,7 +3085,7 @@ class "__gsoBrand"
                               local wDmg = baseDmg + lvlDmg + apDmg
                               local minHP = gsoSDK.Menu.wset.killsteal.minhp:Value()
                               if wDmg > minHP then
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1100, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
                                     for i = 1, #enemyList do
                                           local wTarget = enemyList[i]
                                           if wTarget.health > minHP and wTarget.health < gsoSDK.Spell:CalculateDmg(wTarget, { dmgType = "ap", dmgAP = wDmg }) and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.killsteal.hitchance:Value()) then
@@ -3097,7 +3097,7 @@ class "__gsoBrand"
                         -- Combo / Harass
                         if (mode == "Combo" and gsoSDK.Menu.wset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.wset.comhar.harass:Value()) then
                               local blazeList = {}
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1100, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
@@ -3109,7 +3109,7 @@ class "__gsoBrand"
                                     return
                               end
                               if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1100, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
                                     local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
                                     if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.comhar.hitchance:Value()) then
                                           return
@@ -3118,7 +3118,7 @@ class "__gsoBrand"
                         -- Auto
                         elseif gsoSDK.Menu.wset.auto.enabled:Value() then
                               local blazeList = {}
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1100, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
@@ -3130,7 +3130,7 @@ class "__gsoBrand"
                                     return
                               end
                               if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1100, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
                                     local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
                                     if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.comhar.hitchance:Value()) then
                                           return
