@@ -3126,13 +3126,13 @@ class "__gsoBrand"
                                     end
                               end
                               local wTarget = gsoSDK.TS:GetTarget(blazeList, true)
-                              if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.comhar.hitchance:Value()) then
+                              if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.auto.hitchance:Value()) then
                                     return
                               end
                               if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
                                     local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
                                     local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
-                                    if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.comhar.hitchance:Value()) then
+                                    if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.auto.hitchance:Value()) then
                                           return
                                     end
                               end
