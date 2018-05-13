@@ -3324,7 +3324,7 @@ class "__gsoMorgana"
                                     end
                               end
                               local qTarget = gsoSDK.TS:GetTarget(qList, true)
-                              if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.comhar.hitchance:Value()) then
+                              if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.auto.hitchance:Value()) then
                                     return
                               end
                         end
