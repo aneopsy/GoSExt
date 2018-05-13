@@ -2933,7 +2933,7 @@ class "__gsoBrand"
                               local qDmg = baseDmg + lvlDmg + apDmg
                               local minHP = gsoSDK.Menu.qset.killsteal.minhp:Value()
                               if qDmg > minHP then
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1050, false, "spell")
                                     for i = 1, #enemyList do
                                           local qTarget = enemyList[i]
                                           if qTarget.health > minHP and qTarget.health < gsoSDK.Spell:CalculateDmg(qTarget, { dmgType = "ap", dmgAP = qDmg }) and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.killsteal.hitchance:Value()) then
@@ -2948,7 +2948,7 @@ class "__gsoBrand"
                                     return
                               end
                               local blazeList = {}
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1050, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 and not gsoSDK.Spell:IsCollision(unit, self.qData) then
@@ -2960,7 +2960,7 @@ class "__gsoBrand"
                                     return
                               end
                               if not gsoSDK.Menu.qset.comhar.stun:Value() and GameTimer() > gsoSDK.Spell.LastWk + 1.33 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then
-                                    local qTarget = gsoSDK.TS:GetTarget(gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell"), true)
+                                    local qTarget = gsoSDK.TS:GetTarget(gsoSDK.ObjectManager:GetEnemyHeroes(1050, false, "spell"), true)
                                     if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.comhar.hitchance:Value()) then
                                           return
                                     end
@@ -2971,7 +2971,7 @@ class "__gsoBrand"
                                     return
                               end
                               local blazeList = {}
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1050, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 and not gsoSDK.Spell:IsCollision(unit, self.qData) then
@@ -2979,7 +2979,7 @@ class "__gsoBrand"
                                     end
                               end
                               local qTarget = gsoSDK.TS:GetTarget(blazeList, true)
-                              if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.comhar.hitchance:Value()) then
+                              if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.auto.hitchance:Value()) then
                                     return
                               end
                         end
