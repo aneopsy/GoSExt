@@ -479,7 +479,7 @@ class "__gsoOrbwalker"
             self.TestCount = 0
             self.TestStartTime = 0
             self.LastAttackDiff = 0
-            self.AttackEndTime = myHero.attackData.endTime + 0.1
+            self.AttackEndTime = 0
             self.OnPreAttackC = {}
             self.OnPostAttackC = {}
             self.OnAttackC = {}
@@ -625,7 +625,8 @@ class "__gsoOrbwalker"
                   return true
             end
             local animDelay = gsoSDK.Menu.orb.animdelay:Value() * 0.001
-            if GameTimer() < self.LastAttackLocal + myHero.attackData.animationTime + self.LastAttackDiff + animDelay - 0.15 - gsoSDK.Utilities:GetMaxLatency() then
+            local attackTime = self.LastAttackLocal + myHero.attackData.animationTime + self.LastAttackDiff + animDelay
+            if GameTimer() < attackTime - 0.15 - gsoSDK.Utilities:GetMaxLatency() then
                   return false
             end
             return true
@@ -634,7 +635,8 @@ class "__gsoOrbwalker"
             if not self.CanMoveC() then return false end
             if not gsoSDK.Spell:CheckSpellDelays(self.SpellMoveDelays) then return false end
             local windUpDelay = gsoSDK.Menu.orb.windupdelay:Value() * 0.001
-            if GameTimer() < self.LastAttackLocal + myHero.attackData.windUpTime + self.LastAttackDiff - gsoSDK.Utilities:GetUserLatency() + windUpDelay then
+            local moveTime = self.LastAttackLocal + myHero.attackData.windUpTime + self.LastAttackDiff + windUpDelay + 0.015
+            if GameTimer() < moveTime - gsoSDK.Utilities:GetUserLatency() then
                   return false
             end
             return true
@@ -704,18 +706,6 @@ class "__gsoOrbwalker"
                               self.TestStartTime = 0
                         end
                   end
-            end
-            -- RESET ATTACK
-            if self.LastAttackLocal > self.LastAttackServer and GameTimer() > self.LastAttackLocal + 0.15 + gsoSDK.Utilities:GetMaxLatency() then
-                  if gsoSDK.Menu.orb.enabled:Value() then
-                        print("reset attack1")
-                  end
-                  self.LastAttackLocal = 0
-            elseif self.LastAttackLocal < self.LastAttackServer and GameTimer() < self.LastAttackLocal + myHero.attackData.windUpTime and myHero.pathing.hasMovePath then
-                  if gsoSDK.Menu.orb.enabled:Value() then
-                        print("reset attack2")
-                  end
-                  self.LastAttackLocal = 0
             end
             -- CHECK IF CAN ORBWALK
             local isEvading = ExtLibEvade and ExtLibEvade.Evading
