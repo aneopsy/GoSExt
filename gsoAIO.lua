@@ -271,6 +271,7 @@ class "__gsoFarm"
 ]]
 class "__gsoOB"
       function __gsoOB:__init()
+            self.OBLoadTime = GameTimer()
             self.LastFound = -99999
             self.LoadedChamps = false
             self.AllyHeroes = {}
@@ -402,7 +403,7 @@ class "__gsoOB"
             for i = 1, GameTurretCount() do end
             for i = 1, GameMinionCount() do end
             self.Units.EnemyMinions = self:GetEnemyMinions(2000, false)
-            if self.LoadedChamps then return end
+            if self.LoadedChamps or GameTimer() < self.OBLoadTime + 5 then return end
             for i = 1, GameHeroCount() do
                   local hero = GameHero(i)
                   local eName = hero.charName
@@ -475,15 +476,10 @@ class "__gsoOrbwalker"
             self.LastMouseDown = 0
             self.LastMovePos = myHero.pos
             self.ResetAttack = false
-            self.LastTarget = nil
             self.TestCount = 0
             self.TestStartTime = 0
             self.LastAttackDiff = 0
-            self.BaseAASpeed = 1 / myHero.attackData.animationTime / myHero.attackSpeed
-            self.BaseWindUp = myHero.attackData.windUpTime / myHero.attackData.animationTime
             self.AttackEndTime = myHero.attackData.endTime + 0.1
-            self.WindUpTime = myHero.attackData.windUpTime
-            self.AnimTime = myHero.attackData.animationTime
             self.OnPreAttackC = {}
             self.OnPostAttackC = {}
             self.OnAttackC = {}
@@ -500,14 +496,13 @@ class "__gsoOrbwalker"
       end
       function __gsoOrbwalker:CreateMenu()
             gsoSDK.Menu:MenuElement({name = "Orbwalker", id = "orb", type = MENU, leftIcon = "https://raw.githubusercontent.com/gamsteron/GoSExt/master/Icons/orb.png" })
-                  gsoSDK.Menu.orb:MenuElement({name = "Enabled",  id = "enabledorb", tooltip = "Enabled Gamsteron's OnTick and OnDraw - Attack, Move, Draw Attack Range etc.", value = true})
                   gsoSDK.Menu.orb:MenuElement({name = "Keys", id = "keys", type = MENU})
                   gsoSDK.Menu.orb.keys:MenuElement({name = "Combo Key", id = "combo", key = string.byte(" ")})
                   gsoSDK.Menu.orb.keys:MenuElement({name = "Harass Key", id = "harass", key = string.byte("C")})
                   gsoSDK.Menu.orb.keys:MenuElement({name = "LastHit Key", id = "lasthit", key = string.byte("X")})
                   gsoSDK.Menu.orb.keys:MenuElement({name = "LaneClear Key", id = "laneclear", key = string.byte("V")})
                   gsoSDK.Menu.orb.keys:MenuElement({name = "Flee Key", id = "flee", key = string.byte("A")})
-                  gsoSDK.Menu.orb:MenuElement({name = "Extra WindUp Delay", tooltip = "Less Value = Better KITE", id = "windupdelay", value = 25, min = 0, max = 150, step = 5 })
+                  gsoSDK.Menu.orb:MenuElement({name = "Extra WindUp Delay", tooltip = "Less Value = Better KITE", id = "windupdelay", value = 0, min = 0, max = 50, step = 5 })
                   gsoSDK.Menu.orb:MenuElement({name = "Extra Anim Delay", tooltip = "Less Value = Better DPS [ for me 80 is ideal ] - lower value than 80 cause slow KITE ! Maybe for your PC ideal value is 0 ? You need test it in debug mode.", id = "animdelay", value = 80, min = 0, max = 150, step = 10 })
                   gsoSDK.Menu.orb:MenuElement({name = "Extra LastHit Delay", tooltip = "Less Value = Faster Last Hit Reaction", id = "lhDelay", value = 0, min = 0, max = 50, step = 1 })
                   gsoSDK.Menu.orb:MenuElement({name = "Extra Move Delay", tooltip = "Less Value = More Movement Clicks Per Sec", id = "humanizer", value = 200, min = 120, max = 300, step = 10 })
@@ -523,23 +518,6 @@ class "__gsoOrbwalker"
                   gsoSDK.Menu.gsodraw.he:MenuElement({name = "Color",  id = "color", color = DrawColor(150, 255, 0, 0)})
                   gsoSDK.Menu.gsodraw.he:MenuElement({name = "Width",  id = "width", value = 1, min = 1, max = 10})
       end
-      function __gsoOrbwalker:GetAttackSpeed()
-            return myHero.attackSpeed
-      end
-      function __gsoOrbwalker:GetAvgLatency()
-            local currentLatency = GameLatency() * 0.001
-            local latency = gsoSDK.Utilities:GetMinLatency() + gsoSDK.Utilities:GetMaxLatency() + currentLatency
-            return latency / 3
-      end
-      function __gsoOrbwalker:SetAttackTimers()
-            self.BaseAASpeed = 1 / myHero.attackData.animationTime / myHero.attackSpeed
-            self.BaseWindUp = myHero.attackData.windUpTime / myHero.attackData.animationTime
-            local aaSpeed = self:GetAttackSpeed() * self.BaseAASpeed
-            local animT = 1 / aaSpeed
-            local windUpT = animT * self.BaseWindUp
-            self.AnimTime = animT > myHero.attackData.animationTime and animT or myHero.attackData.animationTime
-            self.WindUpTime = windUpT > myHero.attackData.windUpTime and windUpT or myHero.attackData.windUpTime
-      end
       function __gsoOrbwalker:CheckTeemoBlind()
             for i = 0, myHero.buffCount do
                   local buff = myHero:GetBuff(i)
@@ -550,7 +528,7 @@ class "__gsoOrbwalker"
             return false
       end
       function __gsoOrbwalker:IsBeforeAttack(multipier)
-            if GameTimer() > self.LastAttackLocal + multipier * self.AnimTime then
+            if GameTimer() > self.LastAttackLocal + multipier * myHero.attackData.animationTime then
                   return true
             else
                   return false
@@ -561,47 +539,6 @@ class "__gsoOrbwalker"
       end
       function __gsoOrbwalker:SetSpellAttackDelays(delays)
             self.SpellAttackDelays = delays
-      end
-      function __gsoOrbwalker:GetLastMovePos()
-            return self.LastMovePos
-      end
-      function __gsoOrbwalker:ResetMove()
-            self.LastMoveLocal = 0
-      end
-      function __gsoOrbwalker:ResetAttack()
-            self.ResetAttack = true
-      end
-      function __gsoOrbwalker:GetLastTarget()
-            return self.LastTarget
-      end
-      function __gsoOrbwalker:EnableGosOrb()
-            if not _G.Orbwalker.Enabled:Value() then _G.Orbwalker.Enabled:Value(true) end
-            _G.Orbwalker:Hide(false)
-      end
-      function __gsoOrbwalker:DisableGosOrb()
-            if _G.Orbwalker.Enabled:Value() then _G.Orbwalker.Enabled:Value(false) end
-            _G.Orbwalker:Hide(true)
-      end
-      function __gsoOrbwalker:EnableIcOrb()
-            if _G.SDK and _G.SDK.Orbwalker and _G.SDK.Orbwalker.Loaded then
-                  if not _G.SDK.Orbwalker.Menu.Enabled:Value() then _G.SDK.Orbwalker.Menu.Enabled:Value(true) end
-                  _G.SDK.Orbwalker.Menu:Hide(false)
-            end
-      end
-      function __gsoOrbwalker:DisableIcOrb()
-            if _G.SDK and _G.SDK.Orbwalker and _G.SDK.Orbwalker.Loaded then
-                  if _G.SDK.Orbwalker.Menu.Enabled:Value() then _G.SDK.Orbwalker.Menu.Enabled:Value(false) end
-                  _G.SDK.Orbwalker.Menu:Hide(true)
-            end
-      end
-      function __gsoOrbwalker:ResetAttack()
-            self.ResetAttack = true
-      end
-      function __gsoOrbwalker:SetMovement(boolean)
-            self.MovementEnabled = boolean
-      end
-      function __gsoOrbwalker:SetAttack(boolean)
-            self.AttackEnabled = boolean
       end
       function __gsoOrbwalker:OnPreAttack(func)
             self.OnPreAttackC[#self.OnPreAttackC+1] = func
@@ -630,13 +567,7 @@ class "__gsoOrbwalker"
                   return "None"
             end
       end
-      function __gsoOrbwalker:WndMsg(msg, wParam)
-            if wParam == HK_TCO then
-                  self.LastAttackLocal = GameTimer()
-            end
-      end
       function __gsoOrbwalker:Draw()
-            if not gsoSDK.Menu.orb.enabledorb:Value() then return end
             if gsoSDK.Menu.gsodraw.me.enabled:Value() and myHero.pos:ToScreen().onScreen then
                   DrawCircle(myHero.pos, myHero.range + myHero.boundingRadius + 35, gsoSDK.Menu.gsodraw.me.width:Value(), gsoSDK.Menu.gsodraw.me.color:Value())
             end
@@ -666,7 +597,6 @@ class "__gsoOrbwalker"
             ControlKeyUp(HK_TCO)
             self.LastMoveLocal = 0
             self.LastAttackLocal  = GameTimer()
-            self.LastTarget = unit
       end
       function __gsoOrbwalker:Move()
             if ControlIsKeyDown(2) then self.LastMouseDown = GameTimer() end
@@ -695,7 +625,7 @@ class "__gsoOrbwalker"
                   return true
             end
             local animDelay = gsoSDK.Menu.orb.animdelay:Value() * 0.001
-            if GameTimer() < self.LastAttackLocal + self.AnimTime + self.LastAttackDiff + animDelay - 0.15 - self:GetAvgLatency() then
+            if GameTimer() < self.LastAttackLocal + myHero.attackData.animationTime + self.LastAttackDiff + animDelay - 0.15 - gsoSDK.Utilities:GetMaxLatency() then
                   return false
             end
             return true
@@ -703,17 +633,13 @@ class "__gsoOrbwalker"
       function __gsoOrbwalker:CanMove()
             if not self.CanMoveC() then return false end
             if not gsoSDK.Spell:CheckSpellDelays(self.SpellMoveDelays) then return false end
-            local latency = math.min(gsoSDK.Utilities:GetMinLatency(), GameLatency() * 0.001) * 0.75
-            latency = math.min(latency, gsoSDK.Utilities:GetUserLatency())
             local windUpDelay = gsoSDK.Menu.orb.windupdelay:Value() * 0.001
-            if GameTimer() < self.LastAttackLocal + self.WindUpTime + self.LastAttackDiff - latency - 0.025 + windUpDelay then
+            if GameTimer() < self.LastAttackLocal + myHero.attackData.windUpTime + self.LastAttackDiff - gsoSDK.Utilities:GetUserLatency() + windUpDelay then
                   return false
             end
-            if self.LastAttackLocal > self.LastAttackServer and GameTimer() < self.LastAttackLocal + self.WindUpTime + self.LastAttackDiff - latency + 0.025 + windUpDelay then return false end
             return true
       end
       function __gsoOrbwalker:AttackMove(unit)
-            self.LastTarget = nil
             if self.AttackEnabled and unit and unit.pos:ToScreen().onScreen and self:CanAttack() then
                   local args = { Target = unit, Process = true }
                   for i = 1, #self.OnPreAttackC do
@@ -754,9 +680,9 @@ class "__gsoOrbwalker"
                   self.Loaded = true
             end
             if not self.Loaded then return end
-            self:DisableIcOrb()
-            self:DisableGosOrb()
-            if not gsoSDK.Menu.orb.enabledorb:Value() then return end
+            -- unload other orbwalkers
+            if _G.Orbwalker.Enabled:Value() then _G.Orbwalker.Enabled:Value(false) end
+            if _G.SDK and _G.SDK.Orbwalker and _G.SDK.Orbwalker.Loaded and _G.SDK.Orbwalker.Menu.Enabled:Value() then _G.SDK.Orbwalker.Menu.Enabled:Value(false) end
             if self.IsTeemo then self.IsBlindedByTeemo = self:CheckTeemoBlind() end
             -- SERVER ATTACK START TIME
             if myHero.attackData.endTime > self.AttackEndTime then
@@ -791,8 +717,6 @@ class "__gsoOrbwalker"
                   end
                   self.LastAttackLocal = 0
             end
-            -- ATTACK TIMERS
-            self:SetAttackTimers()
             -- CHECK IF CAN ORBWALK
             local isEvading = ExtLibEvade and ExtLibEvade.Evading
             if not gsoSDK.Cursor:IsCursorReady() or GameIsChatOpen() or isEvading then
@@ -1337,7 +1261,7 @@ class "__gsoSpell"
                               if debugMode then print("PREDICTION FALSE: DASH SPELL") end
                               return false
                         end
-                        isCastingSpell = isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > 0.1
+                        isCastingSpell = isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > 0.233
                         -- get prediction pos
                         local fromToUnit = from:DistanceTo(unitPos) / speed
                         -- enemy is immobile
@@ -1409,7 +1333,7 @@ class "__gsoSpell"
                               ControlSetCursorPos(CastPos)
                               ControlKeyDown(spell)
                               ControlKeyUp(spell)
-                              gsoSDK.Orbwalker:ResetMove()
+                              gsoSDK.Orbwalker.LastMoveLocal = 0
                               result = true
                         end
                   else
@@ -1418,7 +1342,7 @@ class "__gsoSpell"
                         ControlSetCursorPos(CastPos)
                         ControlKeyDown(spell)
                         ControlKeyUp(spell)
-                        gsoSDK.Orbwalker:ResetMove()
+                        gsoSDK.Orbwalker.LastMoveLocal = 0
                         result = true
                   end
             end
@@ -1861,7 +1785,7 @@ class "__gsoUtilities"
             if latency < self.Min then
                   self.Min = latency
             end
-            self.LAT[#self.LAT+1] = { endTime = GameTimer() + 1.5, Latency = latency }
+            self.LAT[#self.LAT+1] = { endTime = GameTimer() + 2.5, Latency = latency }
             local cacheLatencies = {}
             for i = 1, #self.LAT do
                   local t = self.LAT[i]
@@ -1933,7 +1857,6 @@ class "__gsoLoader"
             end)
             Callback.Add('WndMsg', function(msg, wParam)
                   gsoSDK.TS:WndMsg(msg, wParam)
-                  gsoSDK.Orbwalker:WndMsg(msg, wParam)
                   gsoSDK.Spell:WndMsg(msg, wParam)
                   gsoSDK.ChampWndMsg(msg, wParam)
             end)
@@ -1944,14 +1867,6 @@ class "__gsoLoader"
                   gsoSDK.Spell:Draw()
                   gsoSDK.Orbwalker:Draw()
                   gsoSDK.ChampDraw()
-            end)
-            Callback.Add('GameEnd', function()
-                  gsoSDK.Orbwalker:EnableGosOrb()
-                  gsoSDK.Orbwalker:EnableIcOrb()
-            end)
-            Callback.Add('UnLoad', function()
-                  gsoSDK.Orbwalker:EnableGosOrb()
-                  gsoSDK.Orbwalker:EnableIcOrb()
             end)
       end
 --[[
@@ -3117,23 +3032,25 @@ class "__gsoBrand"
                               end
                         -- Auto
                         elseif gsoSDK.Menu.wset.auto.enabled:Value() then
-                              local blazeList = {}
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell")
-                              for i = 1, #enemyList do
-                                    local unit = enemyList[i]
-                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
-                                          blazeList[#blazeList+1] = unit
+                              for i = 1, 3 do
+                                    local blazeList = {}
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1200 - (i * 100), false, "spell")
+                                    for j = 1, #enemyList do
+                                          local unit = enemyList[j]
+                                          if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
+                                                blazeList[#blazeList+1] = unit
+                                          end
                                     end
-                              end
-                              local wTarget = gsoSDK.TS:GetTarget(blazeList, true)
-                              if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.auto.hitchance:Value()) then
-                                    return
-                              end
-                              if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell")
-                                    local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
+                                    local wTarget = gsoSDK.TS:GetTarget(blazeList, true)
                                     if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.auto.hitchance:Value()) then
                                           return
+                                    end
+                                    if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
+                                          local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1200 - (i * 100), false, "spell")
+                                          local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
+                                          if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.auto.hitchance:Value()) then
+                                                return
+                                          end
                                     end
                               end
                         end
