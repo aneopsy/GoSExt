@@ -466,7 +466,7 @@ class "__gsoOB"
 ]]
 class "__gsoOrbwalker"
       function __gsoOrbwalker:__init()
-            -- Attack
+            -- attack
             self.AttackStartTime = 0
             self.AttackEndTime = 0
             self.AttackCastEndTime = 0
@@ -1291,12 +1291,12 @@ class "__gsoSpell"
                   local unitPos = unit.pos
                   if from and spellData and HitChance then
                         local unitID = unit.networkID
-                        local range = spellData.range - 25
                         local radius = spellData.radius
                         local speed = spellData.speed
                         local delay = spellData.delay
                         local sType = spellData.sType
                         local collision = spellData.collision
+                        local range = spellData.range - 35
                         -- extended linear castpos works only right/left, circular in all directions
                         if sType == "line" then
                               range = range - (radius * 0.5)
@@ -1318,19 +1318,17 @@ class "__gsoSpell"
                               if debugMode then print("PREDICTION FALSE: DASH SPELL") end
                               return false
                         end
-                        isCastingSpell = isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > 0.233
+                        isCastingSpell = isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > 0.2
                         -- get prediction pos
                         local fromToUnit = from:DistanceTo(unitPos) / speed
                         -- enemy is immobile
                         if self:IsImmobile(unit, delay + fromToUnit) or isCastingSpell then
                               hitChance = 2
-                              CastPos = unitPos
+                              CastPos = unit.pos
                         elseif unit.pathing.hasMovePath then
                               -- get endPos
                               local endPos = unit.pathing.endPos
-                              local x = unitPos.x - endPos.x
-                              local z = unitPos.z - endPos.z
-                              local UnitEnd = x * x + z * z
+                              local UnitEnd = GetFastDistance(unitPos, endPos)
                               -- not moving or too short click
                               if UnitEnd < 10000 then -- 100*100
                                     if debugMode then print("PREDICTION FALSE: SHORT CLICK") end
@@ -1342,30 +1340,28 @@ class "__gsoSpell"
                               if not self.Waypoints[unitID].IsMoving then
                                     return false
                               end
-                              -- hitchance high -> last move click < 0.2 or dc
+                              -- hitchance high -> last move click < 0.1 or dc
                               local lastWP = GameTimer() - self.Waypoints[unitID].Tick
-                              local longWP = lastWP > 1.5 and lastWP < 5
-                              if lastWP < 0.2 or longWP then
+                              if lastWP > 0.005 and lastWP < 0.1 then
                                     if debugMode then print("HITCHANCE HIGH: LAST CLICK < " .. tostring(lastWP)) end
                                     hitChance = 2
-                              end
-                              -- not moving
-                              if self.MoveLenght[unitID].Lenght < 10 then
-                                    if debugMode then print("PREDICTION FALSE: LENGHT < 10") end
-                                    return false
                               end
                               -- is slowed
                               if hitChance == 1 and self:IsSlowed(unit, delay + fromToUnit) then
                                     if debugMode then print("HITCHANCE HIGH: SLOWED") end
                                     hitChance = 2
+                              -- not moving
+                              elseif self.MoveLenght[unitID].Lenght < 5 then
+                                    if debugMode then print("PREDICTION FALSE: LENGHT < 10") end
+                                    return false
                               end
                               -- enemy is facing or run away
-                              if hitChance == 1 and from:AngleBetween(unitPos, unit.pathing.endPos) < 33 then
+                              if hitChance == 1 and from:AngleBetween(unitPos, endPos) < 33 then
                                     if debugMode then print("HITCHANCE HIGH: IS FACING") end
                                     hitChance = 2
                               end
                               -- enemy long click
-                              if hitChance == 1 and UnitEnd > 1000000 then
+                              if hitChance == 1 and UnitEnd > 4000000 then
                                     if debugMode then print("HITCHANCE HIGH: LONG CLICK") end
                                     hitChance = 2
                               end
@@ -1394,7 +1390,7 @@ class "__gsoSpell"
                               result = true
                         end
                   else
-                        CastPos = unitPos
+                        CastPos = unit.pos
                         gsoSDK.Cursor:SetCursor(cursorPos, CastPos, 0.06)
                         ControlSetCursorPos(CastPos)
                         ControlKeyDown(spell)
@@ -1950,7 +1946,7 @@ class "__gsoTwitch"
             self:AddTickEvent()
       end
       function __gsoTwitch:SetSpellData()
-            self.wData = { delay = 0.25, radius = 150, range = 950, speed = 1400, collision = false, sType = "circular" }
+            self.wData = { delay = 0.25, radius = 50, range = 950, speed = 1400, collision = false, sType = "circular" }
       end
       function __gsoTwitch:CreateMenu()
             gsoSDK.Menu:MenuElement({name = "Q settings", id = "qset", type = MENU })
@@ -2275,16 +2271,6 @@ class "__gsoEzreal"
                   if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 0.33, e = 0.33, r = 1.13 } ) then
                         -- Get Mana Percent
                         local manaPercent = 100 * myHero.mana / myHero.maxMana
-                        -- Auto
-                        if mode == "None" and gsoSDK.Menu.autoq.enable:Value() and manaPercent > gsoSDK.Menu.autoq.mana:Value() then
-                              local enemyHeroes = gsoSDK.ObjectManager:GetEnemyHeroes(1150, false, "spell")
-                              for i = 1, #enemyHeroes do
-                                    local unit = enemyHeroes[i]
-                                    if unit and gsoSDK.Spell:CastSpell(HK_Q, unit, myHero.pos, self.qData, gsoSDK.Menu.autoq.hitchance:Value()) then
-                                          return
-                                    end
-                              end
-                        end
                         -- Combo / Harass
                         if (mode == "Combo" and gsoSDK.Menu.qset.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.qset.harass:Value()) then
                               local QTarget
@@ -2295,6 +2281,15 @@ class "__gsoEzreal"
                               end
                               if QTarget and gsoSDK.Spell:CastSpell(HK_Q, QTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.hitchance:Value()) then
                                     return
+                              end
+                        -- Auto
+                        elseif gsoSDK.Menu.autoq.enable:Value() and manaPercent > gsoSDK.Menu.autoq.mana:Value() then
+                              local enemyHeroes = gsoSDK.ObjectManager:GetEnemyHeroes(1150, false, "spell")
+                              for i = 1, #enemyHeroes do
+                                    local unit = enemyHeroes[i]
+                                    if unit and gsoSDK.Spell:CastSpell(HK_Q, unit, myHero.pos, self.qData, gsoSDK.Menu.autoq.hitchance:Value()) then
+                                          return
+                                    end
                               end
                         end
                         -- Lasthit / LaneClear
@@ -2821,7 +2816,7 @@ class "__gsoBrand"
       end
       function __gsoBrand:SetSpellData()
             self.qData = { delay = 0.25, radius = 80, range = 1050, speed = 1550, collision = true, sType = "line" }
-            self.wData = { delay = 0.625, radius = 100, range = 900, speed = math.huge, collision = false, sType = "circular" }
+            self.wData = { delay = 0.625, radius = 100, range = 875, speed = math.huge, collision = false, sType = "circular" }
       end
       function __gsoBrand:CreateMenu()
             -- Q
@@ -2897,6 +2892,13 @@ class "__gsoBrand"
                   local mode = gsoSDK.Orbwalker:GetMode()
                   -- Q
                   if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 0.33, e = 0.33, r = 0.33 } ) then
+                        -- antigap
+                        local gapList = gsoSDK.ObjectManager:GetEnemyHeroes(300, false, "spell")
+                        for i = 1, #gapList do
+                              if gsoSDK.Spell:CastSpell(HK_Q, gapList[i], myHero.pos, self.qData, 1) then
+                                    return
+                              end
+                        end
                         -- KS
                         if gsoSDK.Menu.qset.killsteal.enabled:Value() then
                               local baseDmg = 50
@@ -2939,7 +2941,7 @@ class "__gsoBrand"
                               end
                         -- Auto
                         elseif gsoSDK.Menu.qset.auto.stun:Value() then
-                              if GameTimer() < gsoSDK.Spell.LastEk + 1 and GameTimer() < gsoSDK.Spell.LastE + 1 and self.ETarget and not self.ETarget.dead and not gsoSDK.Spell:IsCollision(self.ETarget, self.qData) and gsoSDK.Spell:CastSpell(HK_Q, self.ETarget, myHero.pos, self.qData, gsoSDK.Menu.qset.auto.hitchance:Value()) then
+                              if GameTimer() < gsoSDK.Spell.LastEk + 1 and GameTimer() < gsoSDK.Spell.LastE + 1 and self.ETarget and not self.ETarget.dead and not gsoSDK.Spell:IsCollision(self.ETarget, self.qData) and gsoSDK.Spell:CastSpell(HK_Q, self.ETarget, myHero.pos, self.qData, 2) then
                                     return
                               end
                               local blazeList = {}
@@ -2958,6 +2960,14 @@ class "__gsoBrand"
                   end
                   -- E
                   if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
+                        -- antigap
+                        local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(635, false, "spell")
+                        for i = 1, #enemyList do
+                              local unit = enemyList[i]
+                              if GetFastDistance(myHero.pos, unit.pos) < 300 * 300 and gsoSDK.Spell:CastSpell(HK_E, unit) then
+                                    return
+                              end
+                        end
                         -- KS
                         if gsoSDK.Menu.eset.killsteal.enabled:Value() then
                               local baseDmg = 50
@@ -2966,7 +2976,6 @@ class "__gsoBrand"
                               local eDmg = baseDmg + lvlDmg + apDmg
                               local minHP = gsoSDK.Menu.eset.killsteal.minhp:Value()
                               if eDmg > minHP then
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(670, false, "spell")
                                     for i = 1, #enemyList do
                                           local unit = enemyList[i]
                                           if unit.health > minHP and unit.health < gsoSDK.Spell:CalculateDmg(unit, { dmgType = "ap", dmgAP = eDmg }) and gsoSDK.Spell:CastSpell(HK_E, unit) then
@@ -2978,7 +2987,6 @@ class "__gsoBrand"
                         -- Combo / Harass
                         if (mode == "Combo" and gsoSDK.Menu.eset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.eset.comhar.harass:Value()) then
                               local blazeList = {}
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(670, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
@@ -3005,7 +3013,7 @@ class "__gsoBrand"
                                     local isWReady = GameCanUseSpell(_W) == 0 or myHero:GetSpellData(_W).currentCd < 0.75
                                     if isQReady and not isWReady then
                                           local blazeList = {}
-                                          local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(670, false, "spell")
+                                          local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(635, false, "spell")
                                           for i = 1, #enemyList do
                                                 local unit = enemyList[i]
                                                 if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
@@ -3049,6 +3057,13 @@ class "__gsoBrand"
                   end
                   -- W
                   if gsoSDK.Spell:IsReady(_W, { q = 0.33, w = 0.5, e = 0.33, r = 0.33 } ) then
+                        -- antigap
+                        local gapList = gsoSDK.ObjectManager:GetEnemyHeroes(300, false, "spell")
+                        for i = 1, #gapList do
+                              if gsoSDK.Spell:CastSpell(HK_W, gapList[i], myHero.pos, self.wData, 1) then
+                                    return
+                              end
+                        end
                         -- KS
                         if gsoSDK.Menu.wset.killsteal.enabled:Value() then
                               local baseDmg = 30
