@@ -1297,10 +1297,6 @@ class "__gsoSpell"
                         local sType = spellData.sType
                         local collision = spellData.collision
                         local range = spellData.range - 35
-                        -- extended linear castpos works only right/left, circular in all directions
-                        if sType == "line" then
-                              range = range - (radius * 0.5)
-                        end
                         -- check collision
                         if collision and self:IsCollision(unit, spellData) then
                               return false
@@ -1366,7 +1362,11 @@ class "__gsoSpell"
                                     hitChance = 2
                               end
                               -- get predict pos
-                              CastPos = unit:GetPrediction(speed,delay):Extended(unitPos, radius * 0.5)
+                              if sType == "line" then
+                                    CastPos = unit:GetPrediction(speed,delay)
+                              else
+                                    CastPos = unit:GetPrediction(speed,delay):Extended(unitPos, radius * 0.5)
+                              end
                               -- too short or too long distance between unit position and cast pos
                               local UnitCastPos = GetFastDistance(unitPos, CastPos)
                               if UnitCastPos < 2500 or UnitCastPos > 250000 then -- 50*50, 500*500
@@ -3254,6 +3254,226 @@ class "__gsoMorgana"
                         gsoSDK.Menu.rset.comhar:MenuElement({id = "xrange", name = "< X distance enemies to morgana", value = 300, min = 100, max = 550, step = 50})
       end
       function __gsoMorgana:AddTickEvent()
+            gsoSDK.ChampTick = function()
+                  -- Is Attacking
+                  if not gsoSDK.Orbwalker:CanMove() then
+                        return
+                  end
+                  -- Get Mode
+                  local mode = gsoSDK.Orbwalker:GetMode()
+                  -- Q
+                  if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 0.33, e = 0.33, r = 0.33 } ) then
+                        -- KS
+                        if gsoSDK.Menu.qset.killsteal.enabled:Value() then
+                              local baseDmg = 25
+                              local lvlDmg = 55 * myHero:GetSpellData(_Q).level
+                              local apDmg = myHero.ap * 0.9
+                              local qDmg = baseDmg + lvlDmg + apDmg
+                              local minHP = gsoSDK.Menu.qset.killsteal.minhp:Value()
+                              if qDmg > minHP then
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1175, false, "spell")
+                                    for i = 1, #enemyList do
+                                          local qTarget = enemyList[i]
+                                          if qTarget.health > minHP and qTarget.health < gsoSDK.Spell:CalculateDmg(qTarget, { dmgType = "ap", dmgAP = qDmg }) and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.killsteal.hitchance:Value()) then
+                                                return
+                                          end
+                                    end
+                              end
+                        end
+                        -- Combo Harass
+                        if (mode == "Combo" and gsoSDK.Menu.qset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.qset.comhar.harass:Value()) then
+                              local qList = {}
+                              local skipCollision = gsoSDK.Menu.qset.comhar.collision:Value()
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1175, false, "spell")
+                              for i = 1, #enemyList do
+                                    local hero = enemyList[i]
+                                    local heroName = hero.charName
+                                    if gsoSDK.Menu.qset.comhar.useon[heroName] and gsoSDK.Menu.qset.comhar.useon[heroName]:Value() then
+                                          if not skipCollision or not gsoSDK.Spell:IsCollision(hero, self.qData) then
+                                                qList[#qList+1] = hero
+                                          end
+                                    end
+                              end
+                              local qTarget = gsoSDK.TS:GetTarget(qList, true)
+                              if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.comhar.hitchance:Value()) then
+                                    return
+                              end
+                        -- Auto
+                        elseif gsoSDK.Menu.qset.auto.enabled:Value() then
+                              local qList = {}
+                              local skipCollision = gsoSDK.Menu.qset.auto.collision:Value()
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1175, false, "spell")
+                              for i = 1, #enemyList do
+                                    local hero = enemyList[i]
+                                    local heroName = hero.charName
+                                    if gsoSDK.Menu.qset.auto.useon[heroName] and gsoSDK.Menu.qset.auto.useon[heroName]:Value() then
+                                          if not skipCollision or not gsoSDK.Spell:IsCollision(hero, self.qData) then
+                                                qList[#qList+1] = hero
+                                          end
+                                    end
+                              end
+                              local qTarget = gsoSDK.TS:GetTarget(qList, true)
+                              if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.auto.hitchance:Value()) then
+                                    return
+                              end
+                        end
+                  end
+                  -- W
+                  if gsoSDK.Spell:IsReady(_W, { q = 0.33, w = 0.5, e = 0.33, r = 0.33 } ) then
+                        local mSlow = gsoSDK.Menu.wset.slow:Value()
+                        local mImmobile = gsoSDK.Menu.wset.immobile:Value()
+                        local mTime = gsoSDK.Menu.wset.time:Value() * 0.001
+                        if mSlow or mImmobile then
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
+                              for i = 1, #enemyList do
+                                    local unit = enemyList[i]
+                                    local canW = (mImmobile and gsoSDK.Spell:IsImmobile(unit, mTime)) or (mSlow and gsoSDK.Spell:IsSlowed(unit, mTime))
+                                    if canW and gsoSDK.Spell:CastSpell(HK_W, unit) then
+                                          return
+                                    end
+                              end
+                        end
+                  end
+                  --[[ E
+                  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
+                  end
+                  ]]
+                  -- R
+                  if gsoSDK.Spell:IsReady(_R, { q = 0.33, w = 0.33, e = 0.33, r = 0.5 } ) then
+                        -- KS
+                        if gsoSDK.Menu.rset.killsteal.enabled:Value() then
+                              local baseDmg = 75
+                              local lvlDmg = 75 * myHero:GetSpellData(_R).level
+                              local apDmg = myHero.ap * 0.7
+                              local rDmg = baseDmg + lvlDmg + apDmg
+                              local minHP = gsoSDK.Menu.rset.killsteal.minhp:Value()
+                              if rDmg > minHP then
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                                    for i = 1, #enemyList do
+                                          local rTarget = enemyList[i]
+                                          if rTarget.health > minHP and rTarget.health < gsoSDK.Spell:CalculateDmg(rTarget, { dmgType = "ap", dmgAP = rDmg }) and gsoSDK.Spell:CastSpell(HK_R) then
+                                                return
+                                          end
+                                    end
+                              end
+                        end
+                        -- Combo / Harass
+                        if (mode == "Combo" and gsoSDK.Menu.rset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.rset.comhar.harass:Value()) then
+                              local count = 0
+                              local xRange = gsoSDK.Menu.rset.comhar.xrange:Value()
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                              for i = 1, #enemyList do
+                                    local unit = enemyList[i]
+                                    if unit.pos:DistanceTo(myHero.pos) < xRange then
+                                          count = count + 1
+                                    end
+                              end
+                              if count >= gsoSDK.Menu.rset.comhar.xenemies:Value() and gsoSDK.Spell:CastSpell(HK_R) then
+                                    return
+                              end
+                        -- Auto
+                        elseif gsoSDK.Menu.rset.auto.enabled:Value() then
+                              local count = 0
+                              local xRange = gsoSDK.Menu.rset.auto.xrange:Value()
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                              for i = 1, #enemyList do
+                                    local unit = enemyList[i]
+                                    if unit.pos:DistanceTo(myHero.pos) < xRange then
+                                          count = count + 1
+                                    end
+                              end
+                              if count >= gsoSDK.Menu.rset.auto.xenemies:Value() and gsoSDK.Spell:CastSpell(HK_R) then
+                                    return
+                              end
+                        end
+                  end
+            end
+      end
+--[[
+▒█░▄▀ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ▒█░▒█ ▒█▀▀▀█ 
+▒█▀▄░ ▒█▄▄█ ▒█▄▄▀ ░▒█░░ ▒█▀▀█ ▒█░▒█ ░▀▀▀▄▄ 
+▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄▄█ 
+]]
+class "__gsoKarthus"
+      function __gsoKarthus:__init()
+            gsoSDK.Menu = MenuElement({name = "Gamsteron Karthus", id = "gsokarthus", type = MENU, leftIcon = "https://raw.githubusercontent.com/gamsteron/GoSExt/master/Icons/karthusw5s.png" })
+            __gsoLoader()
+            gsoSDK.Orbwalker:SetSpellMoveDelays( { q = 0.2, w = 0.2, e = 0.2, r = 0.2 } )
+            gsoSDK.Orbwalker:SetSpellAttackDelays( { q = 0.33, w = 0.33, e = 0.33, r = 0.33 } )
+            self:SetSpellData()
+            self:CreateMenu()
+            self:AddTickEvent()
+            gsoSDK.Orbwalker:CanAttackEvent(function()
+                  -- LastHit, LaneClear
+                  if not gsoSDK.Menu.orb.keys.combo:Value() and not gsoSDK.Menu.orb.keys.harass:Value() then
+                        return true
+                  end
+                  -- Q
+                  local qDis = gsoSDK.Menu.qset.disaa:Value()
+                  local qLvl = qDis and myHero:GetSpellData(_Q).level or 0
+                  local isQReady = qLvl > 0 and GameCanUseSpell(_Q) == 0
+                  local almostQReady = qLvl > 0 and myHero.mana > myHero:GetSpellData(_Q).mana and myHero:GetSpellData(_Q).currentCd < 1
+                  if isQReady or almostQReady then
+                        return false
+                  end
+                  return true
+            end)
+      end
+      function __gsoKarthus:SetSpellData()
+            self.qData = { delay = 0.25, radius = 80, range = 1175, speed = 1200, collision = true, sType = "line" }
+      end
+      function __gsoKarthus:CreateMenu()
+            -- Q
+            gsoSDK.Menu:MenuElement({name = "Q settings", id = "qset", type = MENU })
+            -- Disable Attack
+                  gsoSDK.Menu.qset:MenuElement({id = "disaa", name = "Disable attack if ready or almostReady", value = false})
+            -- KS
+                  gsoSDK.Menu.qset:MenuElement({name = "KS", id = "killsteal", type = MENU })
+                  gsoSDK.Menu.qset.killsteal:MenuElement({id = "enabled", name = "Enabled", value = false})
+                  gsoSDK.Menu.qset.killsteal:MenuElement({id = "minhp", name = "minimum enemy hp", value = 200, min = 1, max = 300, step = 1})
+                  gsoSDK.Menu.qset.killsteal:MenuElement({id = "hitchance", name = "Hitchance", value = 2, drop = { "normal", "high" } })
+            -- Auto
+                  gsoSDK.Menu.qset:MenuElement({name = "Auto", id = "auto", type = MENU })
+                  gsoSDK.Menu.qset.auto:MenuElement({id = "enabled", name = "Enabled", value = true})
+                  gsoSDK.Menu.qset.auto:MenuElement({id = "collision", name = "Skip enemies that have minion collision", value = true})
+                  gsoSDK.Menu.qset.auto:MenuElement({name = "Use on:", id = "useon", type = MENU })
+                        gsoSDK.ObjectManager:OnEnemyHeroLoad(function(hero) gsoSDK.Menu.qset.auto.useon:MenuElement({id = hero.charName, name = hero.charName, value = true}) end)
+                  gsoSDK.Menu.qset.auto:MenuElement({id = "hitchance", name = "Hitchance", value = 2, drop = { "normal", "high" } })
+            -- Combo / Harass
+                  gsoSDK.Menu.qset:MenuElement({name = "Combo / Harass", id = "comhar", type = MENU })
+                  gsoSDK.Menu.qset.comhar:MenuElement({id = "combo", name = "Combo", value = true})
+                  gsoSDK.Menu.qset.comhar:MenuElement({id = "harass", name = "Harass", value = false})
+                  gsoSDK.Menu.qset.comhar:MenuElement({id = "collision", name = "Skip enemies that have minion collision", value = true})
+                  gsoSDK.Menu.qset.comhar:MenuElement({name = "Use on:", id = "useon", type = MENU })
+                        gsoSDK.ObjectManager:OnEnemyHeroLoad(function(hero) gsoSDK.Menu.qset.comhar.useon:MenuElement({id = hero.charName, name = hero.charName, value = true}) end)
+                  gsoSDK.Menu.qset.comhar:MenuElement({id = "hitchance", name = "Hitchance", value = 2, drop = { "normal", "high" } })
+            -- W
+            gsoSDK.Menu:MenuElement({name = "W settings", id = "wset", type = MENU })
+                  gsoSDK.Menu.wset:MenuElement({id = "slow", name = "Slow", value = false})
+                  gsoSDK.Menu.wset:MenuElement({id = "immobile", name = "Immobile", value = true})
+                  gsoSDK.Menu.wset:MenuElement({id = "time", name = "Minimum milliseconds", value = 500, min = 250, max = 2000, step = 50})
+            -- E
+            gsoSDK.Menu:MenuElement({name = "E settings", id = "eset", type = MENU })
+                  gsoSDK.Menu.eset:MenuElement({id = "note1", name = "Note: not ready yet !", type = SPACE})
+            --R
+            gsoSDK.Menu:MenuElement({name = "R settings", id = "rset", type = MENU })
+                  -- KS
+                  gsoSDK.Menu.rset:MenuElement({name = "KS", id = "killsteal", type = MENU })
+                        gsoSDK.Menu.rset.killsteal:MenuElement({id = "enabled", name = "Enabled", value = false})
+                        gsoSDK.Menu.rset.killsteal:MenuElement({id = "minhp", name = "minimum enemy hp", value = 200, min = 1, max = 300, step = 1})
+                  -- Auto
+                  gsoSDK.Menu.rset:MenuElement({name = "Auto", id = "auto", type = MENU })
+                        gsoSDK.Menu.rset.auto:MenuElement({id = "enabled", name = "Enabled", value = true})
+                        gsoSDK.Menu.rset.auto:MenuElement({id = "xenemies", name = ">= X enemies near morgana", value = 3, min = 1, max = 5, step = 1})
+                        gsoSDK.Menu.rset.auto:MenuElement({id = "xrange", name = "< X distance enemies to morgana", value = 300, min = 100, max = 550, step = 50})
+                  -- Combo / Harass
+                  gsoSDK.Menu.rset:MenuElement({name = "Combo / Harass", id = "comhar", type = MENU })
+                        gsoSDK.Menu.rset.comhar:MenuElement({id = "combo", name = "Use R Combo", value = true})
+                        gsoSDK.Menu.rset.comhar:MenuElement({id = "harass", name = "Use R Harass", value = false})
+                        gsoSDK.Menu.rset.comhar:MenuElement({id = "xenemies", name = ">= X enemies near morgana", value = 2, min = 1, max = 4, step = 1})
+                        gsoSDK.Menu.rset.comhar:MenuElement({id = "xrange", name = "< X distance enemies to morgana", value = 300, min = 100, max = 550, step = 50})
+      end
+      function __gsoKarthus:AddTickEvent()
             gsoSDK.ChampTick = function()
                   -- Is Attacking
                   if not gsoSDK.Orbwalker:CanMove() then
