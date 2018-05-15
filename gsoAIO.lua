@@ -466,28 +466,35 @@ class "__gsoOB"
 ]]
 class "__gsoOrbwalker"
       function __gsoOrbwalker:__init()
-            self.LoadTime = GameTimer()
-            self.IsTeemo = false
-            self.IsBlindedByTeemo = false
-            self.LastAttackLocal = 0
-            self.LastAttackServer = 0
+            -- Attack
+            self.AttackStartTime = 0
+            self.AttackEndTime = 0
+            self.AttackCastEndTime = 0
+            self.AttackServerStart = 0
+            self.AttackLocalStart = 0
+            -- move
             self.LastMoveLocal = 0
             self.LastMoveTime = 0
-            self.LastMouseDown = 0
             self.LastMovePos = myHero.pos
-            self.ResetAttack = false
-            self.TestCount = 0
-            self.TestStartTime = 0
-            self.LastAttackDiff = 0
-            self.AttackEndTime = 0
+            -- mouse
+            self.LastMouseDown = 0
+            -- callbacks
             self.OnPreAttackC = {}
             self.OnPostAttackC = {}
             self.OnAttackC = {}
             self.OnPreMoveC = {}
+            -- debug
+            self.TestCount = 0
+            self.TestStartTime = 0
+            -- other
+            self.LoadTime = GameTimer()
             self.PostAttackBool = false
             self.AttackEnabled = true
             self.MovementEnabled = true
             self.Loaded = false
+            self.IsTeemo = false
+            self.IsBlindedByTeemo = false
+            self.ResetAttack = false
             self.SpellMoveDelays = { q = 0, w = 0, e = 0, r = 0 }
             self.SpellAttackDelays = { q = 0, w = 0, e = 0, r = 0 }
             gsoSDK.ObjectManager:OnEnemyHeroLoad(function(hero) if hero.charName == "Teemo" then self.IsTeemo = true end end)
@@ -506,6 +513,7 @@ class "__gsoOrbwalker"
                   gsoSDK.Menu.orb:MenuElement({name = "Extra Anim Delay", tooltip = "Less Value = Better DPS [ for me 80 is ideal ] - lower value than 80 cause slow KITE ! Maybe for your PC ideal value is 0 ? You need test it in debug mode.", id = "animdelay", value = 80, min = 0, max = 150, step = 10 })
                   gsoSDK.Menu.orb:MenuElement({name = "Extra LastHit Delay", tooltip = "Less Value = Faster Last Hit Reaction", id = "lhDelay", value = 0, min = 0, max = 50, step = 1 })
                   gsoSDK.Menu.orb:MenuElement({name = "Extra Move Delay", tooltip = "Less Value = More Movement Clicks Per Sec", id = "humanizer", value = 200, min = 120, max = 300, step = 10 })
+                  gsoSDK.Menu.orb:MenuElement({name = "Extra Server Timeout", tooltip = "Less Value = Faster reaction after bad response from server", id = "timeout", value = 100, min = 0, max = 200, step = 10 })
                   gsoSDK.Menu.orb:MenuElement({name = "Debug Mode", tooltip = "Will Print Some Data", id = "enabled", value = false})
       end
       function __gsoOrbwalker:CreateDrawMenu(menu)
@@ -528,7 +536,7 @@ class "__gsoOrbwalker"
             return false
       end
       function __gsoOrbwalker:IsBeforeAttack(multipier)
-            if GameTimer() > self.LastAttackLocal + multipier * myHero.attackData.animationTime then
+            if GameTimer() > self.AttackLocalStart + multipier * myHero.attackData.animationTime then
                   return true
             else
                   return false
@@ -596,7 +604,7 @@ class "__gsoOrbwalker"
             ControlMouseEvent(MOUSEEVENTF_RIGHTUP)
             ControlKeyUp(HK_TCO)
             self.LastMoveLocal = 0
-            self.LastAttackLocal  = GameTimer()
+            self.AttackLocalStart = GameTimer()
       end
       function __gsoOrbwalker:Move()
             if ControlIsKeyDown(2) then self.LastMouseDown = GameTimer() end
@@ -615,32 +623,77 @@ class "__gsoOrbwalker"
             self.LastMoveLocal = GameTimer() + gsoSDK.Menu.orb.humanizer:Value() * 0.001
             self.LastMoveTime = GameTimer()
       end
+      
+      -- CAN ATTACK
       function __gsoOrbwalker:CanAttack()
+            
+            -- get can attack from function
             if not self.CanAttackC() then return false end
+            
+            -- spell windups
             if not gsoSDK.Spell:CheckSpellDelays(self.SpellAttackDelays) then return false end
+            
+            -- check teemo blind
             if self.IsBlindedByTeemo then
                   return false
             end
+            
+            -- reset attack
             if self.ResetAttack then
                   return true
             end
-            local animDelay = gsoSDK.Menu.orb.animdelay:Value() * 0.001
-            local attackTime = self.LastAttackLocal + myHero.attackData.animationTime + self.LastAttackDiff + animDelay
-            if GameTimer() < attackTime - 0.15 - gsoSDK.Utilities:GetMaxLatency() then
+            
+            -- waiting for response from server
+            if self.AttackServerStart < self.AttackLocalStart then
+                  -- timeout
+                  local menuTimeout = gsoSDK.Menu.orb.timeout:Value() * 0.001
+                  if GameTimer() > self.AttackLocalStart + 0.12 + menuTimeout + gsoSDK.Utilities:GetMaxLatency() then
+                        return true
+                  end
                   return false
             end
+            
+            -- server timers
+            local menuAnim = gsoSDK.Menu.orb.animdelay:Value() * 0.001
+            if GameTimer() < self.AttackStartTime + myHero.attackData.animationTime + menuAnim - 0.15 - gsoSDK.Utilities:GetMaxLatency() then
+                  return false
+            end
+            
+            -- success
             return true
       end
+      
+      -- CAN MOVE
       function __gsoOrbwalker:CanMove()
+            
+            -- get can move from function
             if not self.CanMoveC() then return false end
+            
+            -- spell windups
             if not gsoSDK.Spell:CheckSpellDelays(self.SpellMoveDelays) then return false end
-            local windUpDelay = gsoSDK.Menu.orb.windupdelay:Value() * 0.001
-            local moveTime = self.LastAttackLocal + myHero.attackData.windUpTime + self.LastAttackDiff + windUpDelay + 0.015
-            if GameTimer() < moveTime - gsoSDK.Utilities:GetUserLatency() then
+            
+            -- waiting for response from server
+            if self.AttackServerStart < self.AttackLocalStart then
+                  -- timeout
+                  local menuTimeout = gsoSDK.Menu.orb.timeout:Value() * 0.001
+                  if GameTimer() > self.AttackLocalStart + 0.12 + menuTimeout + gsoSDK.Utilities:GetMaxLatency() then
+                        return true
+                  end
                   return false
             end
+            
+            -- server timers
+            local menuWindUp = gsoSDK.Menu.orb.windupdelay:Value() * 0.001
+            local userLatency = gsoSDK.Utilities:GetUserLatency()
+            if GameTimer() < self.AttackCastEndTime + menuWindUp - userLatency then
+                  return false
+            end
+            
+            -- success
             return true
       end
+      
+      -- ATTACK MOVE
       function __gsoOrbwalker:AttackMove(unit)
             if self.AttackEnabled and unit and unit.pos:ToScreen().onScreen and self:CanAttack() then
                   local args = { Target = unit, Process = true }
@@ -677,24 +730,37 @@ class "__gsoOrbwalker"
                   end
             end
       end
+      
+      -- ON TICK
       function __gsoOrbwalker:Tick()
+            
+            -- check if loaded
             if not self.Loaded and GameTimer() > self.LoadTime + 2.5 then
                   self.Loaded = true
             end
             if not self.Loaded then return end
+            
             -- unload other orbwalkers
             if _G.Orbwalker.Enabled:Value() then _G.Orbwalker.Enabled:Value(false) end
             if _G.SDK and _G.SDK.Orbwalker and _G.SDK.Orbwalker.Loaded and _G.SDK.Orbwalker.Menu.Enabled:Value() then _G.SDK.Orbwalker.Menu.Enabled:Value(false) end
             if self.IsTeemo then self.IsBlindedByTeemo = self:CheckTeemoBlind() end
-            -- SERVER ATTACK START TIME
-            if myHero.attackData.endTime > self.AttackEndTime then
+            
+            -- server attack timers
+            local meAAData = myHero.attackData
+            if meAAData.endTime > self.AttackEndTime then
+                  
+                  -- on attack
                   for i = 1, #self.OnAttackC do
                         self.OnAttackC[i]()
                   end
-                  local serverStart = myHero.attackData.endTime - myHero.attackData.animationTime
-                  self.LastAttackDiff = serverStart - self.LastAttackLocal
-                  self.LastAttackServer = GameTimer()
-                  self.AttackEndTime = myHero.attackData.endTime
+                  
+                  -- set attack timers
+                  self.AttackStartTime = meAAData.endTime - meAAData.animationTime
+                  self.AttackServerStart = GameTimer()
+                  self.AttackEndTime = meAAData.endTime
+                  self.AttackCastEndTime = meAAData.endTime - meAAData.windDownTime
+                  
+                  -- debug
                   if gsoSDK.Menu.orb.enabled:Value() then
                         if self.TestCount == 0 then
                               self.TestStartTime = GameTimer()
@@ -707,7 +773,8 @@ class "__gsoOrbwalker"
                         end
                   end
             end
-            -- CHECK IF CAN ORBWALK
+            
+            -- cursor not ready, chat open, is evading
             local isEvading = ExtLibEvade and ExtLibEvade.Evading
             if not gsoSDK.Cursor:IsCursorReady() or GameIsChatOpen() or isEvading then
                   return
