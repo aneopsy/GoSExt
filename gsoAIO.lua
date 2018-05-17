@@ -271,7 +271,6 @@ class "__gsoFarm"
 ]]
 class "__gsoOB"
       function __gsoOB:__init()
-            self.OBLoadTime = GameTimer()
             self.LastFound = -99999
             self.LoadedChamps = false
             self.AllyHeroes = {}
@@ -403,7 +402,7 @@ class "__gsoOB"
             for i = 1, GameTurretCount() do end
             for i = 1, GameMinionCount() do end
             self.Units.EnemyMinions = self:GetEnemyMinions(2000, false)
-            if self.LoadedChamps or GameTimer() < self.OBLoadTime + 5 then return end
+            if self.LoadedChamps then return end
             for i = 1, GameHeroCount() do
                   local hero = GameHero(i)
                   local eName = hero.charName
@@ -990,10 +989,57 @@ class "__gsoSpell"
                   self.spellDraw = { q = true, qr = 1100 }
             end
       end
+      -- reduced damage by Marty
       function __gsoSpell:ReducedDmg(unit, dmg, isAP)
-            local def = isAP and unit.magicResist - myHero.magicPen or unit.armor - myHero.armorPen
-            if def > 0 then def = isAP and myHero.magicPenPercent * def or myHero.bonusArmorPenPercent * def end
-            return def > 0 and dmg * ( 100 / ( 100 + def ) ) or dmg * ( 2 - ( 100 / ( 100 - def ) ) )
+            if isAP then
+                  local targetBaseMagicResist = unit.magicResist - unit.bonusMagicResist
+                  local targetBonusMagicResist = unit.bonusMagicResist
+                  local sourceMagicPen = myHero.magicPen
+                  local sourceMagicPenPercent = myHero.magicPenPercent
+                  local magicResistLeft = 0
+                  magicResistLeft = targetBaseMagicResist + targetBonusMagicResist
+                  if magicResistLeft < 0 then 
+                        dmg = dmg * (2 - (100 / (100 - magicResistLeft)))
+                  elseif magicResistLeft >= 0 then
+                        if sourceMagicPenPercent > 0 then --  make sure it dont will calculate magicResist = 0 (tested ingame and myHero.magicPenPercent was always 0, should be 1)
+                              targetBaseMagicResist = targetBaseMagicResist * sourceMagicPenPercent
+                              targetBonusMagicResist = targetBonusMagicResist * sourceMagicPenPercent
+                        end
+                        magicResistLeft = targetBaseMagicResist + targetBonusMagicResist - sourceMagicPen
+                        if magicResistLeft < 0 then
+                              dmg = dmg
+                        elseif magicResistLeft >= 0 then
+                              dmg = dmg * (100 / (100 + magicResistLeft))
+                        end
+                  end	
+            else
+                  local targetBaseArmor = unit.armor - unit.bonusArmor
+                  local targetBonusArmor = unit.bonusArmor
+                  local sourceArmorPen = myHero.armorPen
+                  local sourceArmorPenPercent = myHero.armorPenPercent
+                  local sourceBonusArmorPenPercent = myHero.bonusArmorPenPercent
+                  local myHerolevel = myHero.levelData.lvl
+                  local armorLeft = 0
+                  armorLeft = targetBaseArmor + targetBonusArmor
+                  if armorLeft < 0 then
+                        dmg = dmg * (2 - (100 / (100 - armorLeft)))
+                  elseif armorLeft >= 0 then
+                        if sourceArmorPenPercent > 0 then -- make sure it dont will calculate armor = 0 
+                              targetBaseArmor = targetBaseArmor * sourceArmorPenPercent
+                              targetBonusArmor = targetBonusArmor * sourceArmorPenPercent
+                        end
+                        if sourceBonusArmorPenPercent > 0 then --  make sure it dont will calculate armor = 0 
+                              targetBonusArmor = targetBonusArmor * sourceBonusArmorPenPercent
+                        end
+                        armorLeft = targetBaseArmor + targetBonusArmor - (sourceArmorPen * (0.6 + (0.4 * myHerolevel * 0.0555555)))-- * 0.055555 entspricht /18, Formel für FlatDmgPen von Lethality
+                        if armorLeft < 0 then
+                              dmg = dmg
+                        elseif armorLeft >= 0 then
+                              dmg = dmg * (100 / (100 + armorLeft))
+                        end
+                  end
+            end
+            return dmg
       end
       function __gsoSpell:CalculateDmg(unit, spellData)
             local dmgType = spellData.dmgType and spellData.dmgType or ""
@@ -1303,7 +1349,7 @@ class "__gsoSpell"
                                     return false
                               end
                               -- hitchance high
-                              if GameTimer() - self.Waypoints[unitID].Tick < 0.075 or UnitEnd > 4000000 or from:AngleBetween(unitPos, endPos) < 30 or self:IsSlowed(unit, delay + fromToUnit) then
+                              if GameTimer() - self.Waypoints[unitID].Tick < 0.1 or UnitEnd > 4000000 or from:AngleBetween(unitPos, endPos) < 30 or self:IsSlowed(unit, delay + fromToUnit) then
                                     if debugMode then print("HITCHANCE HIGH") end
                                     hitChance = 2
                               end
@@ -1318,7 +1364,8 @@ class "__gsoSpell"
                               if UnitCastPos < 1000 or UnitCastPos > 250000 then -- 50*50, 500*500
                                     return false
                               end
-                        elseif not isCastingSpell and not self:IsImmobile(unit, 0) then
+                        elseif not isCastingSpell then
+                              if self:IsImmobile(unit, 0) then return false end
                               -- get last waypoint
                               self:SaveWaypointsSingle(unit)
                               -- isMoving
@@ -1328,6 +1375,14 @@ class "__gsoSpell"
                               -- dc, minion block etc.
                               if GameTimer() - self.Waypoints[unitID].Tick > 0.25 then
                                     CastPos = unit.pos
+                                    if GameTimer() - self.Waypoints[unitID].Tick > 2 then
+                                          hitChance = 2
+                                    end
+                              end
+                        elseif unit.activeSpell.isAutoAttack then
+                              CastPos = unit.pos
+                              if GameTimer() - unit.activeSpell.startTime < 0.1 then
+                                    hitChance = 2
                               end
                         end
                         if not CastPos or not CastPos:ToScreen().onScreen then
@@ -3352,35 +3407,221 @@ class "__gsoMorgana"
 ▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄▄█ 
 ]]
 class "__gsoKarthus"
+
       function __gsoKarthus:__init()
             gsoSDK.Menu = MenuElement({name = "Gamsteron Karthus", id = "gsokarthus", type = MENU, leftIcon = "https://raw.githubusercontent.com/gamsteron/GoSExt/master/Icons/karthusw5s.png" })
             __gsoLoader()
-            gsoSDK.Orbwalker:SetSpellMoveDelays( { q = 0.2, w = 0.2, e = 0.2, r = 0.2 } )
-            gsoSDK.Orbwalker:SetSpellAttackDelays( { q = 0.33, w = 0.33, e = 0.33, r = 0.33 } )
+            gsoSDK.Orbwalker:SetSpellMoveDelays( { q = 0.2, w = 0.2, e = 0.2, r = 3.13 } )
+            gsoSDK.Orbwalker:SetSpellAttackDelays( { q = 0.33, w = 0.33, e = 0.33, r = 3.23 } )
             self:SetSpellData()
             self:CreateMenu()
+            self:CreateDrawMenu()
+            self:AddDrawEvent()
             self:AddTickEvent()
             gsoSDK.Orbwalker:CanAttackEvent(function()
-                  -- LastHit, LaneClear
+                  if not gsoSDK.Menu.qset.disaa:Value() then
+                        return true
+                  end
                   if not gsoSDK.Menu.orb.keys.combo:Value() and not gsoSDK.Menu.orb.keys.harass:Value() then
                         return true
                   end
-                  -- Q
-                  local qDis = gsoSDK.Menu.qset.disaa:Value()
-                  local qLvl = qDis and myHero:GetSpellData(_Q).level or 0
-                  local isQReady = qLvl > 0 and GameCanUseSpell(_Q) == 0
-                  local almostQReady = qLvl > 0 and myHero.mana > myHero:GetSpellData(_Q).mana and myHero:GetSpellData(_Q).currentCd < 1
-                  if isQReady or almostQReady then
+                  if myHero.mana > myHero:GetSpellData(_Q).mana then
                         return false
                   end
                   return true
             end)
       end
+      
       function __gsoKarthus:SetSpellData()
+            self.qData = { delay = 0.5, radius = -200, range = 900, speed = math.huge, collision = false, sType = "circular" }
+            self.wData = { delay = 0.25, radius = 0, range = 1000, speed = math.huge, collision = false, sType = "line" }
       end
+      
       function __gsoKarthus:CreateMenu()
+            -- Q
+            gsoSDK.Menu:MenuElement({name = "Q settings", id = "qset", type = MENU })
+            -- Disable Attack
+                  gsoSDK.Menu.qset:MenuElement({id = "disaa", name = "Disable attack", value = true})
+            -- KS
+                  gsoSDK.Menu.qset:MenuElement({name = "KS", id = "killsteal", type = MENU })
+                  gsoSDK.Menu.qset.killsteal:MenuElement({id = "enabled", name = "Enabled", value = true})
+                  gsoSDK.Menu.qset.killsteal:MenuElement({id = "minhp", name = "minimum enemy hp", value = 200, min = 1, max = 300, step = 1})
+                  gsoSDK.Menu.qset.killsteal:MenuElement({id = "hitchance", name = "Hitchance", value = 1, drop = { "normal", "high" } })
+            -- Auto
+                  gsoSDK.Menu.qset:MenuElement({name = "Auto", id = "auto", type = MENU })
+                        gsoSDK.Menu.qset.auto:MenuElement({id = "enabled", name = "Enabled", value = true})
+                        gsoSDK.Menu.qset.auto:MenuElement({name = "Use on:", id = "useon", type = MENU })
+                              gsoSDK.ObjectManager:OnEnemyHeroLoad(function(hero) gsoSDK.Menu.qset.auto.useon:MenuElement({id = hero.charName, name = hero.charName, value = true}) end)
+                        gsoSDK.Menu.qset.auto:MenuElement({id = "hitchance", name = "Hitchance", value = 2, drop = { "normal", "high" } })
+            -- Combo / Harass
+                  gsoSDK.Menu.qset:MenuElement({name = "Combo / Harass", id = "comhar", type = MENU })
+                        gsoSDK.Menu.qset.comhar:MenuElement({id = "combo", name = "Combo", value = true})
+                        gsoSDK.Menu.qset.comhar:MenuElement({id = "harass", name = "Harass", value = false})
+                        gsoSDK.Menu.qset.comhar:MenuElement({id = "hitchance", name = "Hitchance", value = 2, drop = { "normal", "high" } })
+            -- W
+            gsoSDK.Menu:MenuElement({name = "W settings", id = "wset", type = MENU })
+                  gsoSDK.Menu.wset:MenuElement({id = "combo", name = "Combo", value = true})
+                  gsoSDK.Menu.wset:MenuElement({id = "harass", name = "Harass", value = false})
+                  gsoSDK.Menu.wset:MenuElement({id = "slow", name = "Auto OnSlow", value = true})
+                  gsoSDK.Menu.wset:MenuElement({id = "immobile", name = "Auto OnImmobile", value = true})
+                  gsoSDK.Menu.wset:MenuElement({id = "hitchance", name = "Hitchance", value = 2, drop = { "normal", "high" } })
+            -- E
+            gsoSDK.Menu:MenuElement({name = "E settings", id = "eset", type = MENU })
+                  gsoSDK.Menu.eset:MenuElement({id = "auto", name = "Auto", value = true})
+                  gsoSDK.Menu.eset:MenuElement({id = "combo", name = "Combo", value = true})
+                  gsoSDK.Menu.eset:MenuElement({id = "harass", name = "Harass", value = false})
+                  gsoSDK.Menu.eset:MenuElement({id = "minmp", name = "minimum mana percent", value = 25, min = 1, max = 100, step = 1})
+            --R
+            gsoSDK.Menu:MenuElement({name = "R settings", id = "rset", type = MENU })
+                  gsoSDK.Menu.rset:MenuElement({id = "killsteal", name = "Auto KS X enemies in passive form", value = true})
+                  gsoSDK.Menu.rset:MenuElement({id = "kscount", name = "^^^ X enemies ^^^", value = 2, min = 1, max = 5, step = 1})
+      end
+      function __gsoKarthus:CreateDrawMenu()
+            gsoSDK.Menu.gsodraw:MenuElement({name = "Draw Kill Count", id = "ksdraw", type = MENU })
+                  gsoSDK.Menu.gsodraw.ksdraw:MenuElement({id = "enabled", name = "Enabled", value = true})
+                  gsoSDK.Menu.gsodraw.ksdraw:MenuElement({id = "size", name = "Text Size", value = 25, min = 1, max = 64, step = 1 })
+      end
+      function __gsoKarthus:GetQDmg()
+            local qLvl = myHero:GetSpellData(_Q).level
+            if qLvl == 0 then return 0 end
+            local baseDmg = 30
+            local lvlDmg = 20 * qLvl
+            local apDmg = myHero.ap * 0.3
+            return baseDmg + lvlDmg + apDmg
+      end
+      function __gsoKarthus:GetRDmg()
+            local rLvl = myHero:GetSpellData(_R).level
+            if rLvl == 0 then return 0 end
+            local baseDmg = 100
+            local lvlDmg = 150 * rLvl
+            local apDmg = myHero.ap * 0.75
+            return baseDmg + lvlDmg + apDmg
+      end
+      function __gsoKarthus:AddDrawEvent()
+            gsoSDK.ChampDraw = function()
+                  if gsoSDK.Menu.gsodraw.ksdraw.enabled:Value() and GameCanUseSpell(_R) == 0 then
+                        local rCount = 0
+                        local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(99999, false, "spell_invisible")
+                        for i = 1, #enemyList do
+                              local rTarget = enemyList[i]
+                              if rTarget.health < gsoSDK.Spell:CalculateDmg(rTarget, { dmgType = "ap", dmgAP = self:GetRDmg() }) then
+                                    rCount = rCount + 1
+                              end
+                        end
+                        local mePos = myHero.pos:To2D()
+                        local posX = mePos.x - 50
+                        local posY = mePos.y
+                        if rCount > 0 then
+                              DrawText("Kill Count: "..rCount, gsoSDK.Menu.gsodraw.ksdraw.size:Value(), posX, posY, DrawColor(255, 000, 255, 000)) 
+                        else
+                              DrawText("Kill Count: "..rCount, gsoSDK.Menu.gsodraw.ksdraw.size:Value(), posX, posY, DrawColor(150, 255, 000, 000)) 
+                        end
+                  end
+            end
       end
       function __gsoKarthus:AddTickEvent()
+            gsoSDK.ChampTick = function()
+                  -- Is Attacking
+                  if not gsoSDK.Orbwalker:CanMove() then
+                        return
+                  end
+                  -- Get Mode
+                  local mode = gsoSDK.Orbwalker:GetMode()
+                  -- Has Passive Buff
+                  local hasPassive = gsoSDK.Spell:HasBuff(myHero, "karthusdeathdefiedbuff")
+                  -- W
+                  if gsoSDK.Spell:IsReady(_W, { q = 0.33, w = 0.5, e = 0.33, r = 3.23 } ) then
+                        local mSlow = gsoSDK.Menu.wset.slow:Value()
+                        local mImmobile = gsoSDK.Menu.wset.immobile:Value()
+                        if (mode == "Combo" and gsoSDK.Menu.wset.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.wset.harass:Value()) then
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1000, false, "spell")
+                              local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
+                              if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.hitchance:Value()) then
+                                    return
+                              end
+                        elseif mSlow or mImmobile then
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1000, false, "spell")
+                              for i = 1, #enemyList do
+                                    local unit = enemyList[i]
+                                    local canW = (mImmobile and gsoSDK.Spell:IsImmobile(unit, 0.5)) or (mSlow and gsoSDK.Spell:IsSlowed(unit, 0.5))
+                                    if canW and gsoSDK.Spell:CastSpell(HK_W, unit, myHero.pos, self.wData, gsoSDK.Menu.wset.hitchance:Value()) then
+                                          return
+                                    end
+                              end
+                        end
+                  end
+                  -- E
+                  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 3.23 } ) and not hasPassive then
+                        if gsoSDK.Menu.eset.auto:Value() or (mode == "Combo" and gsoSDK.Menu.eset.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.eset.harass:Value()) then
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(425, false, "spell")
+                              local eBuff = gsoSDK.Spell:HasBuff(myHero, "karthusdefile")
+                              if eBuff and #enemyList == 0 and gsoSDK.Spell:CastSpell(HK_E) then
+                                    return
+                              end
+                              if not eBuff and #enemyList > 0 and gsoSDK.Spell:CastSpell(HK_E) then
+                                    return
+                              end
+                        end
+                  end
+                  -- Q
+                  if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 0.33, e = 0.33, r = 3.23 } ) and gsoSDK.Spell:CustomIsReady(_Q, 1) then
+                        -- KS
+                        if gsoSDK.Menu.qset.killsteal.enabled:Value() then
+                              local qDmg = self:GetQDmg()
+                              local minHP = gsoSDK.Menu.qset.killsteal.minhp:Value()
+                              if qDmg > minHP then
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(875, false, "spell")
+                                    for i = 1, #enemyList do
+                                          local qTarget = enemyList[i]
+                                          if qTarget.health > minHP and qTarget.health < gsoSDK.Spell:CalculateDmg(qTarget, { dmgType = "ap", dmgAP = self:GetQDmg() }) and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.killsteal.hitchance:Value()) then
+                                                return
+                                          end
+                                    end
+                              end
+                        end
+                        -- Combo Harass
+                        if (mode == "Combo" and gsoSDK.Menu.qset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.qset.comhar.harass:Value()) then
+                              for i = 1, 3 do
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1000 - (i*100), false, "spell")
+                                    local qTarget = gsoSDK.TS:GetTarget(enemyList, true)
+                                    if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.comhar.hitchance:Value()) then
+                                          return
+                                    end
+                              end
+                        -- Auto
+                        elseif gsoSDK.Menu.qset.auto.enabled:Value() then
+                              for i = 1, 3 do
+                                    local qList = {}
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1000 - (i*100), false, "spell")
+                                    for i = 1, #enemyList do
+                                          local hero = enemyList[i]
+                                          local heroName = hero.charName
+                                          if gsoSDK.Menu.qset.auto.useon[heroName] and gsoSDK.Menu.qset.auto.useon[heroName]:Value() then
+                                                qList[#qList+1] = hero
+                                          end
+                                    end
+                                    local qTarget = gsoSDK.TS:GetTarget(qList, true)
+                                    if qTarget and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.auto.hitchance:Value()) then
+                                          return
+                                    end
+                              end
+                        end
+                  end
+                  -- R
+                  if gsoSDK.Spell:IsReady(_R, { q = 0.33, w = 0.33, e = 0.33, r = 0.5 } ) and gsoSDK.Menu.rset.killsteal:Value() and hasPassive then
+                        local rCount = 0
+                        local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(99999, false, "spell_invisible")
+                        for i = 1, #enemyList do
+                              local rTarget = enemyList[i]
+                              if rTarget.health < gsoSDK.Spell:CalculateDmg(rTarget, { dmgType = "ap", dmgAP = self:GetRDmg() }) then
+                                    rCount = rCount + 1
+                              end
+                        end
+                        if rCount > gsoSDK.Menu.rset.kscount:Value() and gsoSDK.Spell:CastSpell(HK_R) then
+                              return
+                        end
+                  end
+            end
       end
 --[[
 ▒█░░░ ▒█▀▀▀█ ░█▀▀█ ▒█▀▀▄ 　 ░█▀▀█ ▒█░░░ ▒█░░░ 
@@ -3399,6 +3640,8 @@ elseif myHero.charName == "Brand" then
       __gsoBrand()
 elseif myHero.charName == "Morgana" then
       __gsoMorgana()
+elseif myHero.charName == "Karthus" then
+      __gsoKarthus()
 else
       gsoSDK.Menu = MenuElement({name = "Gamsteron Test", id = "gamsteron", type = MENU })
       __gsoLoader()
