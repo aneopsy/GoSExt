@@ -3019,7 +3019,7 @@ class "__gsoBrand"
                   -- Get Mode
                   local mode = gsoSDK.Orbwalker:GetMode()
                   -- Q
-                  if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 0.33, e = 0.33, r = 0.33 } ) then
+                  if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 1.3, e = 0.5, r = 0.33 } ) then
                         -- antigap
                         local gapList = gsoSDK.ObjectManager:GetEnemyHeroes(300, false, "spell")
                         for i = 1, #gapList do
@@ -3087,7 +3087,7 @@ class "__gsoBrand"
                         end
                   end
                   -- E
-                  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
+                  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.53, e = 0.5, r = 0.33 } ) then
                         -- antigap
                         local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(635, false, "spell")
                         for i = 1, #enemyList do
