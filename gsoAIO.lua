@@ -1453,6 +1453,7 @@ class "__gsoSpell"
                                     end
                               else
                                     CastPos = unit.pos
+                                    hitChance = 2
                               end
                         elseif unit.pathing.hasMovePath then
                               -- get endPos
@@ -1470,7 +1471,7 @@ class "__gsoSpell"
                                     return false
                               end
                               -- hitchance high
-                              if GameTimer() - self.Waypoints[unitID].Tick < 0.1 or UnitEnd > 4000000 or from:AngleBetween(unitPos, endPos) < 30 or self:IsSlowed(unit, delay + fromToUnit) then
+                              if GameTimer() - self.Waypoints[unitID].Tick < 0.1 or UnitEnd > 4000000 or from:AngleBetween(unitPos, endPos) < 25 or self:IsSlowed(unit, delay + fromToUnit) then
                                     if debugMode then print("HITCHANCE HIGH") end
                                     hitChance = 2
                               end
