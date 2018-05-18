@@ -1431,11 +1431,29 @@ class "__gsoSpell"
                         local fromToUnit = from:DistanceTo(unitPos) / speed
                         -- immobile
                         local isImmobile = self:IsImmobile(unit, delay + fromToUnit)
-                        local isSpell = isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > 0.15
                         -- enemy is immobile
-                        if isImmobile or isSpell then
-                              hitChance = 2
-                              CastPos = unit.pos
+                        if isImmobile or isCastingSpell then
+                              if isCastingSpell then
+                                    if unit.activeSpell.isAutoAttack then
+                                          local startTime = GameTimer() - unit.activeSpell.startTime
+                                          if startTime < 0.25 then
+                                                CastPos = unit.pos
+                                          end
+                                          if startTime < 0.05 then
+                                                hitChance = 2
+                                          end
+                                    else
+                                          local castEndTime = unit.activeSpell.castEndTime - GameTimer() 
+                                          if castEndTime > 0.1 then
+                                                CastPos = unit.pos
+                                          end
+                                          if castEndTime > 0.33 then
+                                                hitChance = 2
+                                          end
+                                    end
+                              else
+                                    CastPos = unit.pos
+                              end
                         elseif unit.pathing.hasMovePath then
                               -- get endPos
                               local endPos = unit.pathing.endPos
@@ -1473,11 +1491,6 @@ class "__gsoSpell"
                               end
                               CastPos = unit.pos
                               if GameTimer() - self.Waypoints[unitID].Tick > 0.5 then
-                                    hitChance = 2
-                              end
-                        elseif unit.activeSpell.isAutoAttack then
-                              CastPos = unit.pos
-                              if GameTimer() - unit.activeSpell.startTime < 0.1 then
                                     hitChance = 2
                               end
                         end
@@ -3713,7 +3726,7 @@ class "__gsoKarthus"
                   -- R
                   if gsoSDK.Spell:IsReady(_R, { q = 0.33, w = 0.33, e = 0.33, r = 0.5 } ) and gsoSDK.Menu.rset.killsteal:Value() and hasPassive then
                         local rCount = 0
-                        local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(99999, false, "spell_invisible")
+                        local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(99999, false, "spell")
                         for i = 1, #enemyList do
                               local rTarget = enemyList[i]
                               if rTarget.health < gsoSDK.Spell:CalculateDmg(rTarget, { dmgType = "ap", dmgAP = self:GetRDmg() }) then
