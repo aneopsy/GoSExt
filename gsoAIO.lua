@@ -1474,7 +1474,7 @@ class "__gsoSpell"
                               -- dc, minion block etc.
                               if GameTimer() - self.Waypoints[unitID].Tick > 0.25 then
                                     CastPos = unit.pos
-                                    if GameTimer() - self.Waypoints[unitID].Tick > 2 then
+                                    if GameTimer() - self.Waypoints[unitID].Tick > 1 then
                                           hitChance = 2
                                     end
                               end
@@ -1483,6 +1483,8 @@ class "__gsoSpell"
                               if GameTimer() - unit.activeSpell.startTime < 0.1 then
                                     hitChance = 2
                               end
+                        elseif not self.Waypoints[unitID].IsMoving then
+                              CastPos = unit.pos
                         end
                         if not CastPos or not CastPos:ToScreen().onScreen then
                               --if debugMode then print("PREDICTION FALSE: NOT ON SCREEN") end
@@ -3538,7 +3540,7 @@ class "__gsoKarthus"
       end
       
       function __gsoKarthus:SetSpellData()
-            self.qData = { delay = 0.5, radius = 100, range = 900, speed = math.huge, collision = false, sType = "circular" }
+            self.qData = { delay = 0.5, radius = 75, range = 900, speed = math.huge, collision = false, sType = "circular" }
             self.wData = { delay = 0.25, radius = 0, range = 1000, speed = math.huge, collision = false, sType = "line" }
       end
       
