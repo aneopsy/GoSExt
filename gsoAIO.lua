@@ -1471,20 +1471,15 @@ class "__gsoSpell"
                               if self.Waypoints[unitID].IsMoving then
                                     return false
                               end
-                              -- dc, minion block etc.
-                              if GameTimer() - self.Waypoints[unitID].Tick > 0.25 then
-                                    CastPos = unit.pos
-                                    if GameTimer() - self.Waypoints[unitID].Tick > 1 then
-                                          hitChance = 2
-                                    end
+                              CastPos = unit.pos
+                              if GameTimer() - self.Waypoints[unitID].Tick > 0.5 then
+                                    hitChance = 2
                               end
                         elseif unit.activeSpell.isAutoAttack then
                               CastPos = unit.pos
                               if GameTimer() - unit.activeSpell.startTime < 0.1 then
                                     hitChance = 2
                               end
-                        elseif not self.Waypoints[unitID].IsMoving then
-                              CastPos = unit.pos
                         end
                         if not CastPos or not CastPos:ToScreen().onScreen then
                               --if debugMode then print("PREDICTION FALSE: NOT ON SCREEN") end
