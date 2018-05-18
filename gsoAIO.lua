@@ -1491,7 +1491,7 @@ class "__gsoSpell"
                                     return false
                               end
                               CastPos = unit.pos
-                              if GameTimer() - self.Waypoints[unitID].Tick > 0.5 then
+                              if GameTimer() - self.Waypoints[unitID].Tick > 0.25 then
                                     hitChance = 2
                               end
                         end
