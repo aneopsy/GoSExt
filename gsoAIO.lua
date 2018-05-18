@@ -1431,7 +1431,7 @@ class "__gsoSpell"
                         local fromToUnit = from:DistanceTo(unitPos) / speed
                         -- immobile
                         local isImmobile = self:IsImmobile(unit, delay + fromToUnit)
-                        local isSpell = isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > delay + gsoSDK.Utilities:GetMaxLatency() + fromToUnit - 0.1
+                        local isSpell = isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > 0.15
                         -- enemy is immobile
                         if isImmobile or isSpell then
                               hitChance = 2
@@ -3535,7 +3535,7 @@ class "__gsoKarthus"
       end
       
       function __gsoKarthus:SetSpellData()
-            self.qData = { delay = 0.5, radius = 75, range = 900, speed = math.huge, collision = false, sType = "circular" }
+            self.qData = { delay = 0.625, radius = 75, range = 900, speed = math.huge, collision = false, sType = "circular" }
             self.wData = { delay = 0.25, radius = 0, range = 1000, speed = math.huge, collision = false, sType = "line" }
       end
       
