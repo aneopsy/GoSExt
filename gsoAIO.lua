@@ -3660,7 +3660,8 @@ class "__gsoKarthus"
                               if eBuff and #enemyList == 0 and gsoSDK.Spell:CastSpell(HK_E) then
                                     return
                               end
-                              if not eBuff and #enemyList > 0 and gsoSDK.Spell:CastSpell(HK_E) then
+                              local manaPercent = 100 * myHero.mana / myHero.maxMana
+                              if not eBuff and #enemyList > 0 and manaPercent > gsoSDK.Menu.eset.minmp:Value() and gsoSDK.Spell:CastSpell(HK_E) then
                                     return
                               end
                         end
