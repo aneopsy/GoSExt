@@ -3046,14 +3046,14 @@ class "__gsoBrand"
                         end
                         -- Combo Harass
                         if (mode == "Combo" and gsoSDK.Menu.qset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.qset.comhar.harass:Value()) then
-                              if GameTimer() < gsoSDK.Spell.LastEk + 1 and GameTimer() < gsoSDK.Spell.LastE + 1 and self.ETarget and not self.ETarget.dead and not gsoSDK.Spell:IsCollision(self.ETarget, self.qData) and gsoSDK.Spell:CastSpell(HK_Q, self.ETarget, myHero.pos, self.qData, gsoSDK.Menu.qset.comhar.hitchance:Value()) then
+                              if GameTimer() < gsoSDK.Spell.LastEk + 1 and GameTimer() > gsoSDK.Spell.LastE + 0.33 and self.ETarget and not self.ETarget.dead and not gsoSDK.Spell:IsCollision(self.ETarget, self.qData) and gsoSDK.Spell:CastSpell(HK_Q, self.ETarget, myHero.pos, self.qData, gsoSDK.Menu.qset.comhar.hitchance:Value()) then
                                     return
                               end
                               local blazeList = {}
                               local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1050, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
-                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 and not gsoSDK.Spell:IsCollision(unit, self.qData) then
+                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.5 and not gsoSDK.Spell:IsCollision(unit, self.qData) then
                                           blazeList[#blazeList+1] = unit
                                     end
                               end
@@ -3069,14 +3069,14 @@ class "__gsoBrand"
                               end
                         -- Auto
                         elseif gsoSDK.Menu.qset.auto.stun:Value() then
-                              if GameTimer() < gsoSDK.Spell.LastEk + 1 and GameTimer() < gsoSDK.Spell.LastE + 1 and self.ETarget and not self.ETarget.dead and not gsoSDK.Spell:IsCollision(self.ETarget, self.qData) and gsoSDK.Spell:CastSpell(HK_Q, self.ETarget, myHero.pos, self.qData, 2) then
+                              if GameTimer() < gsoSDK.Spell.LastEk + 1 and GameTimer() > gsoSDK.Spell.LastE + 0.33 and self.ETarget and not self.ETarget.dead and not gsoSDK.Spell:IsCollision(self.ETarget, self.qData) and gsoSDK.Spell:CastSpell(HK_Q, self.ETarget, myHero.pos, self.qData, 2) then
                                     return
                               end
                               local blazeList = {}
                               local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1050, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
-                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 and not gsoSDK.Spell:IsCollision(unit, self.qData) then
+                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.5 and not gsoSDK.Spell:IsCollision(unit, self.qData) then
                                           blazeList[#blazeList+1] = unit
                                     end
                               end
@@ -3117,7 +3117,7 @@ class "__gsoBrand"
                               local blazeList = {}
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
-                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
+                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.33 then
                                           blazeList[#blazeList+1] = unit
                                     end
                               end
@@ -3144,7 +3144,7 @@ class "__gsoBrand"
                                           local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(635, false, "spell")
                                           for i = 1, #enemyList do
                                                 local unit = enemyList[i]
-                                                if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
+                                                if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.33 then
                                                       blazeList[#blazeList+1] = unit
                                                 end
                                           end
@@ -3170,7 +3170,7 @@ class "__gsoBrand"
                                           local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(670, false, "spell")
                                           for i = 1, #enemyList do
                                                 local unit = enemyList[i]
-                                                if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
+                                                if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.33 then
                                                       blazeList[#blazeList+1] = unit
                                                 end
                                           end
@@ -3215,7 +3215,7 @@ class "__gsoBrand"
                               local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
-                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
+                                    if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 1.33 then
                                           blazeList[#blazeList+1] = unit
                                     end
                               end
@@ -3237,7 +3237,7 @@ class "__gsoBrand"
                                     local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1200 - (i * 100), false, "spell")
                                     for j = 1, #enemyList do
                                           local unit = enemyList[j]
-                                          if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 0.35 then
+                                          if gsoSDK.Spell:GetBuffDuration(unit, "brandablaze") > 1.33 then
                                                 blazeList[#blazeList+1] = unit
                                           end
                                     end
