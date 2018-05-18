@@ -2944,7 +2944,7 @@ class "__gsoBrand"
       end
       function __gsoBrand:SetSpellData()
             self.qData = { delay = 0.25, radius = 80, range = 1050, speed = 1550, collision = true, sType = "line" }
-            self.wData = { delay = 0.625, radius = 200, range = 875, speed = math.huge, collision = false, sType = "circular" }
+            self.wData = { delay = 0.625, radius = 150, range = 875, speed = math.huge, collision = false, sType = "circular" }
       end
       function __gsoBrand:CreateMenu()
             -- Q
