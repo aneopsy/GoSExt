@@ -1442,29 +1442,9 @@ class "__gsoSpell"
                         -- immobile
                         local isImmobile = self:IsImmobile(unit, delay + fromToUnit)
                         -- enemy is immobile
-                        if isImmobile or isCastingSpell then
-                              if isCastingSpell then
-                                    if unit.activeSpell.isAutoAttack then
-                                          local startTime = GameTimer() - unit.activeSpell.startTime
-                                          if startTime < 0.25 then
-                                                CastPos = unit.pos
-                                          end
-                                          if startTime < 0.05 then
-                                                hitChance = 2
-                                          end
-                                    else
-                                          local castEndTime = unit.activeSpell.castEndTime - GameTimer() 
-                                          if castEndTime > 0.1 then
-                                                CastPos = unit.pos
-                                          end
-                                          if castEndTime > 0.33 then
-                                                hitChance = 2
-                                          end
-                                    end
-                              else
-                                    CastPos = unit.pos
-                                    hitChance = 2
-                              end
+                        if isImmobile or (isCastingSpell and unit.activeSpell.castEndTime - GameTimer() > 0.33) then
+                              CastPos = unit.pos
+                              hitChance = 2
                         elseif unit.pathing.hasMovePath then
                               -- get endPos
                               local endPos = unit.pathing.endPos
@@ -1501,7 +1481,7 @@ class "__gsoSpell"
                                     return false
                               end
                               CastPos = unit.pos
-                              if GameTimer() - self.Waypoints[unitID].Tick > 0.25 then
+                              if GameTimer() - self.Waypoints[unitID].Tick > 1 then
                                     hitChance = 2
                               end
                         end
