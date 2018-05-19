@@ -359,12 +359,8 @@ class "__gsoAntiGapcloser"
             local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(500, false, "spell")
             for i =1, #enemyList do
                   local enemy = enemyList[i]
-                  local pos = enemy.pos
-                  local path = enemy.pathing
-                  if path.hasMovePath and GetFastDistance(mePos, pos) > GetFastDistance(mePos, pos + (path.endPos-pos):Normalized() * 50) then
-                        for j = 1, #self.Callback do
-                              self.Callback[j](enemy)
-                        end
+                  for j = 1, #self.Callback do
+                        self.Callback[j](enemy)
                   end
             end
       end
@@ -741,11 +737,6 @@ class "__gsoOrbwalker"
                   return false
             end
             
-            -- reset attack
-            if self.ResetAttack then
-                  return true
-            end
-            
             -- waiting for response from server
             if self.AttackServerStart < self.AttackLocalStart then
                   -- timeout
@@ -754,6 +745,11 @@ class "__gsoOrbwalker"
                         return true
                   end
                   return false
+            end
+            
+            -- reset attack
+            if self.ResetAttack then
+                  return true
             end
             
             -- server timers
@@ -3789,7 +3785,7 @@ class "__gsoVayne"
                   gsoSDK.Menu.rset:MenuElement({id = "qready", name = "Only if Q ready or almost ready", value = true})
                   gsoSDK.Menu.rset:MenuElement({id = "combo", name = "Combo - if X enemies near vayne", value = true})
                   gsoSDK.Menu.rset:MenuElement({id = "xcount", name = "  ^^^ X enemies ^^^", value = 3, min = 1, max = 5, step = 1})
-                  gsoSDK.Menu.rset:MenuElement({id = "xcount", name = "^^^ max. distance ^^^", value = 500, min = 250, max = 750, step = 50})
+                  gsoSDK.Menu.rset:MenuElement({id = "xdistance", name = "^^^ max. distance ^^^", value = 500, min = 250, max = 750, step = 50})
       end
       
       function __gsoVayne:AddTickEvent()
@@ -3818,34 +3814,39 @@ class "__gsoVayne"
                               end
                         end
                   end
+                  -- R
+                  if mode == "Combo" and gsoSDK.Menu.rset.combo:Value() and gsoSDK.Spell:IsReady(_R, { q = 0.5, w = 0, e = 0.5, r = 0.5 } ) then
+                        local canR = true
+                        if gsoSDK.Menu.rset.qready:Value() then
+                              local canUseQ = GameCanUseSpell(_Q)
+                              local isQReady = canUseQ == 0 or (canUseQ == 32 and myHero.mana > myHero:GetSpellData(_Q).mana and myHero:GetSpellData(_Q).currentCd < 0.75)
+                              if not isQReady then
+                                    canR = false
+                              end
+                        end
+                        if canR then
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(gsoSDK.Menu.rset.xdistance:Value(), false, "spell")
+                              if #enemyList >= gsoSDK.Menu.rset.xcount:Value() and gsoSDK.Spell:CastSpell(HK_R) then
+                                    return
+                              end
+                        end
+                  end
                   --Q
-                  if (mode == "Combo" and gsoSDK.Menu.qset.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.qset.harass:Value()) then
-                        if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 0, e = 0.5, r = 0 } ) then
+                  if gsoSDK.Spell:IsReady(_Q, { q = 0.5, w = 0, e = 0.5, r = 0 } ) then
+                        if (mode == "Combo" and gsoSDK.Menu.qset.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.qset.harass:Value()) then
+                              local mePos = myHero.pos
                               local meRange = myHero.range + myHero.boundingRadius
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(meRange, true, "attack")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1000, false, "attack")
                               for i = 1, #enemyList do
                                     local hero = enemyList[i]
-                                    local heroPos = hero.pos
-                                    local mePos = myHero.pos
-                                    local distToMouse = mePos:DistanceTo(mousePos)
-                                    local distToHero = mePos:DistanceTo(heroPos)
-                                    local distToEndPos = mePos:DistanceTo(hero.pathing.endPos)
-                                    local extRange
-                                    if distToEndPos > distToHero then
-                                          extRange = distToMouse > 200 and 200 or distToMouse
-                                    else
-                                          extRange = distToMouse > 300 and 300 or distToMouse
-                                    end
-                                    local extPos = mePos + (mousePos-mePos):Normalized() * extRange
-                                    local distEnemyToExt = extPos:DistanceTo(heroPos)
-                                    if distEnemyToExt < meRange + hero.boundingRadius and gsoSDK.Spell:CastSpell(HK_Q) then
+                                    if mePos:DistanceTo(mousePos) > 300 and mePos:Extended(mousePos, 300):DistanceTo(hero.pos) < meRange + hero.boundingRadius - 35 and gsoSDK.Spell:CastSpell(HK_Q) then
                                           return
                                     end
                               end
-                        elseif GameTimer() > self.lastReset + 1 and gsoSDK.Spell:HasBuff(myHero, "vaynetumblebonus") then
-                              gsoSDK.Spell.ResetAttack = true
-                              self.lastReset = GameTimer()
                         end
+                  elseif GameTimer() > self.lastReset + 1 and gsoSDK.Spell:HasBuff(myHero, "vaynetumblebonus") then
+                        gsoSDK.Orbwalker.ResetAttack = true
+                        self.lastReset = GameTimer()
                   end
             end
       end
