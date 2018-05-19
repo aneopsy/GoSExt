@@ -1468,8 +1468,7 @@ class "__gsoSpell"
                               if UnitCastPos < 1000 or UnitCastPos > 250000 then -- 50*50, 500*500
                                     return false
                               end
-                        elseif not isCastingSpell then
-                              if self:IsImmobile(unit, 0) then return false end
+                        elseif not isCastingSpell and not self:IsImmobile(unit, 0) then
                               -- get last waypoint
                               self:SaveWaypointsSingle(unit)
                               -- isMoving
