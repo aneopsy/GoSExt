@@ -337,7 +337,7 @@ class "__gsoInterrupter"
             for i =1, #enemyList do
                   local enemy = enemyList[i]
                   local activeSpell = enemy.activeSpell
-                  if activeSpell and activeSpell.valid and self.Spells[activeSpell.name] and activeSpell.isChanneling and spell.castEndTime - GameTimer() > 0.33 then
+                  if activeSpell and activeSpell.valid and self.Spells[activeSpell.name] and activeSpell.isChanneling and activeSpell.castEndTime - GameTimer() > 0.33 then
                         for j = 1, #self.Callback do
                               self.Callback[j](enemy, activeSpell)
                         end
