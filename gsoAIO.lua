@@ -1,3 +1,4 @@
+-- Enjoy It
 --[[
 ▒█░░░ ▒█▀▀▀█ ▒█▀▀█ ░█▀▀█ ▒█░░░ ▒█▀▀▀█ 
 ▒█░░░ ▒█░░▒█ ▒█░░░ ▒█▄▄█ ▒█░░░ ░▀▀▀▄▄ 
@@ -1069,6 +1070,8 @@ class "__gsoSpell"
                   self.spellDraw = { q = true, qr = 1175, e = true, er = 1280, r = true, rf = function() local rlvl = myHero:GetSpellData(_R).level; if rlvl == 0 then return 1200 else return 900 + 300 * rlvl end end }
             elseif myHero.charName == "Lucian" then
                   self.spellDraw = { q = true, qr = 500+120, w = true, wr = 900+350, e = true, er = 425, r = true, rr = 1200 }
+			elseif myHero.charName == "Morgana" then
+                  self.spellDraw = { q = true, qr = 1175, w = true, wr = 900, e = true, er = 800, r = true, rr = 625 }
             elseif myHero.charName == "Nami" then
                   self.spellDraw = { q = true, qr = 875, w = true, wr = 725, e = true, er = 800, r = true, rr = 2750 }
             elseif myHero.charName == "Sivir" then
@@ -3463,7 +3466,7 @@ class "__gsoMorgana"
                               local rDmg = baseDmg + lvlDmg + apDmg
                               local minHP = gsoSDK.Menu.rset.killsteal.minhp:Value()
                               if rDmg > minHP then
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
                                     for i = 1, #enemyList do
                                           local rTarget = enemyList[i]
                                           if rTarget.health > minHP and rTarget.health < gsoSDK.Spell:CalculateDmg(rTarget, { dmgType = "ap", dmgAP = rDmg }) and gsoSDK.Spell:CastSpell(HK_R) then
@@ -3476,7 +3479,7 @@ class "__gsoMorgana"
                         if (mode == "Combo" and gsoSDK.Menu.rset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.rset.comhar.harass:Value()) then
                               local count = 0
                               local xRange = gsoSDK.Menu.rset.comhar.xrange:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if unit.pos:DistanceTo(myHero.pos) < xRange then
@@ -3490,7 +3493,7 @@ class "__gsoMorgana"
                         elseif gsoSDK.Menu.rset.auto.enabled:Value() then
                               local count = 0
                               local xRange = gsoSDK.Menu.rset.auto.xrange:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if unit.pos:DistanceTo(myHero.pos) < xRange then
