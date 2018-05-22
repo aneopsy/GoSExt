@@ -1069,6 +1069,8 @@ class "__gsoSpell"
                   self.spellDraw = { q = true, qr = 1175, e = true, er = 1280, r = true, rf = function() local rlvl = myHero:GetSpellData(_R).level; if rlvl == 0 then return 1200 else return 900 + 300 * rlvl end end }
             elseif myHero.charName == "Lucian" then
                   self.spellDraw = { q = true, qr = 500+120, w = true, wr = 900+350, e = true, er = 425, r = true, rr = 1200 }
+			elseif myHero.charName == "Morgana" then
+                  self.spellDraw = { q = true, qr = 1175, w = true, wr = 900, e = true, er = 800, r = true, rr = 625 }
             elseif myHero.charName == "Nami" then
                   self.spellDraw = { q = true, qr = 875, w = true, wr = 725, e = true, er = 800, r = true, rr = 2750 }
             elseif myHero.charName == "Sivir" then
@@ -3315,7 +3317,7 @@ class "__gsoMorgana"
             end)
       end
       function __gsoMorgana:SetSpellData()
-            self.qData = { delay = 0.25, radius = 80, range = 1175, speed = 1200, collision = true, sType = "line" }
+            self.qData = { delay = 0.25, radius = 80, range = 1175, speed = myHero:GetSpellData(_Q).speed, collision = true, sType = "line" }
       end
       function __gsoMorgana:CreateMenu()
             -- Q
@@ -3349,7 +3351,7 @@ class "__gsoMorgana"
                   gsoSDK.Menu.wset:MenuElement({id = "time", name = "Minimum milliseconds", value = 500, min = 250, max = 2000, step = 50})
             -- E
             gsoSDK.Menu:MenuElement({name = "E settings", id = "eset", type = MENU })
-                  gsoSDK.Menu.eset:MenuElement({id = "note1", name = "Note: not ready yet !", type = SPACE})
+                  gsoSDK.Menu.eset:MenuElement({id = "ally", name = "Use on ally", value = true})
             --R
             gsoSDK.Menu:MenuElement({name = "R settings", id = "rset", type = MENU })
                   -- KS
@@ -3449,10 +3451,26 @@ class "__gsoMorgana"
                               end
                         end
                   end
-                  --[[ E
-                  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
-                  end
-                  ]]
+                  -- E
+				  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
+				  	for i = 1, GameHeroCount() do
+						local hero = Game.Hero(i)
+						if hero and hero.isEnemy and hero.activeSpell.valid and hero.isChanneling then
+							local currSpell = hero.activeSpell
+							local spellPos = Vector(currSpell.placementPos.x, currSpell.placementPos.y, currSpell.placementPos.z)
+							for i = 1, Game.HeroCount() do
+								local ally = Game.Hero(i)
+								if ally and ((ally.isAlly and gsoSDK.Menu.eset.ally:Value()) or ally == myHero) then
+									if (ally.pos:DistanceTo(spellPos) < currSpell.width + (ally.boundingRadius * 1.5)) or currSpell.target == ally.handle then
+										if Control.CastSpell(HK_E, ally) then
+											return
+										end										
+									end
+								end
+							end
+						end
+					end
+				  end
                   -- R
                   if gsoSDK.Spell:IsReady(_R, { q = 0.33, w = 0.33, e = 0.33, r = 0.5 } ) then
                         -- KS
@@ -3463,7 +3481,7 @@ class "__gsoMorgana"
                               local rDmg = baseDmg + lvlDmg + apDmg
                               local minHP = gsoSDK.Menu.rset.killsteal.minhp:Value()
                               if rDmg > minHP then
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
                                     for i = 1, #enemyList do
                                           local rTarget = enemyList[i]
                                           if rTarget.health > minHP and rTarget.health < gsoSDK.Spell:CalculateDmg(rTarget, { dmgType = "ap", dmgAP = rDmg }) and gsoSDK.Spell:CastSpell(HK_R) then
@@ -3476,7 +3494,7 @@ class "__gsoMorgana"
                         if (mode == "Combo" and gsoSDK.Menu.rset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.rset.comhar.harass:Value()) then
                               local count = 0
                               local xRange = gsoSDK.Menu.rset.comhar.xrange:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if unit.pos:DistanceTo(myHero.pos) < xRange then
@@ -3490,7 +3508,7 @@ class "__gsoMorgana"
                         elseif gsoSDK.Menu.rset.auto.enabled:Value() then
                               local count = 0
                               local xRange = gsoSDK.Menu.rset.auto.xrange:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(550, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if unit.pos:DistanceTo(myHero.pos) < xRange then
