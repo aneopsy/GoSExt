@@ -1,4 +1,3 @@
--- Enjoy It
 --[[
 ▒█░░░ ▒█▀▀▀█ ▒█▀▀█ ░█▀▀█ ▒█░░░ ▒█▀▀▀█ 
 ▒█░░░ ▒█░░▒█ ▒█░░░ ▒█▄▄█ ▒█░░░ ░▀▀▀▄▄ 
@@ -3352,7 +3351,7 @@ class "__gsoMorgana"
                   gsoSDK.Menu.wset:MenuElement({id = "time", name = "Minimum milliseconds", value = 500, min = 250, max = 2000, step = 50})
             -- E
             gsoSDK.Menu:MenuElement({name = "E settings", id = "eset", type = MENU })
-                  gsoSDK.Menu.eset:MenuElement({id = "note1", name = "Note: not ready yet !", type = SPACE})
+                  gsoSDK.Menu.eset:MenuElement({id = "ally", name = "Use on ally", value = true})
             --R
             gsoSDK.Menu:MenuElement({name = "R settings", id = "rset", type = MENU })
                   -- KS
@@ -3461,8 +3460,8 @@ class "__gsoMorgana"
 							local spellPos = Vector(currSpell.placementPos.x, currSpell.placementPos.y, currSpell.placementPos.z)
 							for i = 1, Game.HeroCount() do
 								local ally = Game.Hero(i)
-								if ally and ally.isAlly then
-									if (ally.pos:DistanceTo(spellPos) < currSpell.range + (ally.boundingRadius * 1.5)) or currSpell.target == ally.handle then
+								if ally and ((ally.isAlly and gsoSDK.Menu.eset.ally:Value()) or ally == myHero) then
+									if (ally.pos:DistanceTo(spellPos) < currSpell.width + (ally.boundingRadius * 1.5)) or currSpell.target == ally.handle then
 										if Control.CastSpell(HK_E, ally) then
 											return
 										end										
