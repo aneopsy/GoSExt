@@ -3318,7 +3318,7 @@ class "__gsoMorgana"
             end)
       end
       function __gsoMorgana:SetSpellData()
-            self.qData = { delay = 0.25, radius = 80, range = 1175, speed = 1200, collision = true, sType = "line" }
+            self.qData = { delay = 0.25, radius = 80, range = 1175, speed = myHero:GetSpellData(_Q).speed, collision = true, sType = "line" }
       end
       function __gsoMorgana:CreateMenu()
             -- Q
@@ -3452,10 +3452,26 @@ class "__gsoMorgana"
                               end
                         end
                   end
-                  --[[ E
-                  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
-                  end
-                  ]]
+                  -- E
+				  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
+				  	for i = 1, GameHeroCount() do
+						local hero = Game.Hero(i)
+						if hero and hero.isEnemy and hero.activeSpell.valid and hero.isChanneling then
+							local currSpell = hero.activeSpell
+							local spellPos = Vector(currSpell.placementPos.x, currSpell.placementPos.y, currSpell.placementPos.z)
+							for i = 1, Game.HeroCount() do
+								local ally = Game.Hero(i)
+								if ally and ally.isAlly then
+									if (ally.pos:DistanceTo(spellPos) < currSpell.range + (ally.boundingRadius * 1.5)) or currSpell.target == ally.handle then
+										if Control.CastSpell(HK_E, ally) then
+											return
+										end										
+									end
+								end
+							end
+						end
+					end
+				  end
                   -- R
                   if gsoSDK.Spell:IsReady(_R, { q = 0.33, w = 0.33, e = 0.33, r = 0.5 } ) then
                         -- KS
