@@ -1,7 +1,7 @@
 --[[
-▒█░░░ ▒█▀▀▀█ ▒█▀▀█ ░█▀▀█ ▒█░░░ ▒█▀▀▀█ 
-▒█░░░ ▒█░░▒█ ▒█░░░ ▒█▄▄█ ▒█░░░ ░▀▀▀▄▄ 
-▒█▄▄█ ▒█▄▄▄█ ▒█▄▄█ ▒█░▒█ ▒█▄▄█ ▒█▄▄▄█ 
+▒█░░░ ▒█▀▀▀█ ▒█▀▀█ ░█▀▀█ ▒█░░░ ▒█▀▀▀█
+▒█░░░ ▒█░░▒█ ▒█░░░ ▒█▄▄█ ▒█░░░ ░▀▀▀▄▄
+▒█▄▄█ ▒█▄▄▄█ ▒█▄▄█ ▒█░▒█ ▒█▄▄█ ▒█▄▄▄█
 ]]
 local gsoSDK = {
       ChampTick = function() end,
@@ -80,9 +80,9 @@ end
       return false
   end
 --[[
-▒█▀▀█ █░░█ █▀▀█ █▀▀ █▀▀█ █▀▀█ 
-▒█░░░ █░░█ █▄▄▀ ▀▀█ █░░█ █▄▄▀ 
-▒█▄▄█ ░▀▀▀ ▀░▀▀ ▀▀▀ ▀▀▀▀ ▀░▀▀ 
+▒█▀▀█ █░░█ █▀▀█ █▀▀ █▀▀█ █▀▀█
+▒█░░░ █░░█ █▄▄▀ ▀▀█ █░░█ █▄▄▀
+▒█▄▄█ ░▀▀▀ ▀░▀▀ ▀▀▀ ▀▀▀▀ ▀░▀▀
 ]]
 class "__gsoCursor"
       function __gsoCursor:__init()
@@ -129,9 +129,9 @@ class "__gsoCursor"
             end
       end
 --[[
-▒█▀▀▀ █▀▀█ █▀▀█ █▀▄▀█ 
-▒█▀▀▀ █▄▄█ █▄▄▀ █░▀░█ 
-▒█░░░ ▀░░▀ ▀░▀▀ ▀░░░▀ 
+▒█▀▀▀ █▀▀█ █▀▀█ █▀▄▀█
+▒█▀▀▀ █▄▄█ █▄▄▀ █░▀░█
+▒█░░░ ▀░░▀ ▀░▀▀ ▀░░░▀
 ]]
 class "__gsoFarm"
       function __gsoFarm:__init()
@@ -301,9 +301,9 @@ class "__gsoFarm"
             self.ShouldWait = false
       end
 --[[
-▀█▀ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀ ▒█▀▀█ ▒█░▒█ ▒█▀▀█ ▀▀█▀▀ ▒█▀▀▀ ▒█▀▀█ 
-▒█░ ▒█▒█▒█ ░▒█░░ ▒█▀▀▀ ▒█▄▄▀ ▒█░▒█ ▒█▄▄█ ░▒█░░ ▒█▀▀▀ ▒█▄▄▀ 
-▄█▄ ▒█░░▀█ ░▒█░░ ▒█▄▄▄ ▒█░▒█ ░▀▄▄▀ ▒█░░░ ░▒█░░ ▒█▄▄▄ ▒█░▒█ 
+▀█▀ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀ ▒█▀▀█ ▒█░▒█ ▒█▀▀█ ▀▀█▀▀ ▒█▀▀▀ ▒█▀▀█
+▒█░ ▒█▒█▒█ ░▒█░░ ▒█▀▀▀ ▒█▄▄▀ ▒█░▒█ ▒█▄▄█ ░▒█░░ ▒█▀▀▀ ▒█▄▄▀
+▄█▄ ▒█░░▀█ ░▒█░░ ▒█▄▄▄ ▒█░▒█ ░▀▄▄▀ ▒█░░░ ░▒█░░ ▒█▄▄▄ ▒█░▒█
 ]]
 class "__gsoInterrupter"
       function __gsoInterrupter:__init()
@@ -345,9 +345,9 @@ class "__gsoInterrupter"
             end
       end
 --[[
-░█▀▀█ ▒█▄░▒█ ▀▀█▀▀ ▀█▀ ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▒█▀▀█ 
-▒█▄▄█ ▒█▒█▒█ ░▒█░░ ▒█░ ▒█░▄▄ ▒█▄▄█ ▒█▄▄█ ▒█░░░ ▒█░░░ ▒█░░▒█ ░▀▀▀▄▄ ▒█▀▀▀ ▒█▄▄▀ 
-▒█░▒█ ▒█░░▀█ ░▒█░░ ▄█▄ ▒█▄▄█ ▒█░▒█ ▒█░░░ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄█ ▒█▄▄▄█ ▒█▄▄▄ ▒█░▒█ 
+░█▀▀█ ▒█▄░▒█ ▀▀█▀▀ ▀█▀ ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀█ ▒█▀▀▀█ ▒█▀▀▀ ▒█▀▀█
+▒█▄▄█ ▒█▒█▒█ ░▒█░░ ▒█░ ▒█░▄▄ ▒█▄▄█ ▒█▄▄█ ▒█░░░ ▒█░░░ ▒█░░▒█ ░▀▀▀▄▄ ▒█▀▀▀ ▒█▄▄▀
+▒█░▒█ ▒█░░▀█ ░▒█░░ ▄█▄ ▒█▄▄█ ▒█░▒█ ▒█░░░ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄█ ▒█▄▄▄█ ▒█▄▄▄ ▒█░▒█
 ]]
 class "__gsoAntiGapcloser"
       function __gsoAntiGapcloser:__init()
@@ -365,9 +365,9 @@ class "__gsoAntiGapcloser"
             end
       end
 --[[
-▒█▀▀▀█ █▀▀▄ ░░▀ █▀▀ █▀▀ ▀▀█▀▀ 　 ▒█▀▄▀█ █▀▀█ █▀▀▄ █▀▀█ █▀▀▀ █▀▀ █▀▀█ 
-▒█░░▒█ █▀▀▄ ░░█ █▀▀ █░░ ░░█░░ 　 ▒█▒█▒█ █▄▄█ █░░█ █▄▄█ █░▀█ █▀▀ █▄▄▀ 
-▒█▄▄▄█ ▀▀▀░ █▄█ ▀▀▀ ▀▀▀ ░░▀░░ 　 ▒█░░▒█ ▀░░▀ ▀░░▀ ▀░░▀ ▀▀▀▀ ▀▀▀ ▀░▀▀ 
+▒█▀▀▀█ █▀▀▄ ░░▀ █▀▀ █▀▀ ▀▀█▀▀ 　 ▒█▀▄▀█ █▀▀█ █▀▀▄ █▀▀█ █▀▀▀ █▀▀ █▀▀█
+▒█░░▒█ █▀▀▄ ░░█ █▀▀ █░░ ░░█░░ 　 ▒█▒█▒█ █▄▄█ █░░█ █▄▄█ █░▀█ █▀▀ █▄▄▀
+▒█▄▄▄█ ▀▀▀░ █▄█ ▀▀▀ ▀▀▀ ░░▀░░ 　 ▒█░░▒█ ▀░░▀ ▀░░▀ ▀░░▀ ▀▀▀▀ ▀▀▀ ▀░▀▀
 ]]
 class "__gsoOB"
       function __gsoOB:__init()
@@ -559,9 +559,9 @@ class "__gsoOB"
             end
       end
 --[[
-▒█▀▀▀█ █▀▀█ █▀▀▄ █░░░█ █▀▀█ █░░ █░█ █▀▀ █▀▀█ 
-▒█░░▒█ █▄▄▀ █▀▀▄ █▄█▄█ █▄▄█ █░░ █▀▄ █▀▀ █▄▄▀ 
-▒█▄▄▄█ ▀░▀▀ ▀▀▀░ ░▀░▀░ ▀░░▀ ▀▀▀ ▀░▀ ▀▀▀ ▀░▀▀ 
+▒█▀▀▀█ █▀▀█ █▀▀▄ █░░░█ █▀▀█ █░░ █░█ █▀▀ █▀▀█
+▒█░░▒█ █▄▄▀ █▀▀▄ █▄█▄█ █▄▄█ █░░ █▀▄ █▀▀ █▄▄▀
+▒█▄▄▄█ ▀░▀▀ ▀▀▀░ ░▀░▀░ ▀░░▀ ▀▀▀ ▀░▀ ▀▀▀ ▀░▀▀
 ]]
 class "__gsoOrbwalker"
       function __gsoOrbwalker:__init()
@@ -722,21 +722,21 @@ class "__gsoOrbwalker"
             self.LastMoveLocal = GameTimer() + gsoSDK.Menu.orb.humanizer:Value() * 0.001
             self.LastMoveTime = GameTimer()
       end
-      
+
       -- CAN ATTACK
       function __gsoOrbwalker:CanAttack()
-            
+
             -- get can attack from function
             if not self.CanAttackC() then return false end
-            
+
             -- spell windups
             if not gsoSDK.Spell:CheckSpellDelays(self.SpellAttackDelays) then return false end
-            
+
             -- check teemo blind
             if self.IsBlindedByTeemo then
                   return false
             end
-            
+
             -- waiting for response from server
             if self.AttackServerStart < self.AttackLocalStart then
                   -- timeout
@@ -746,31 +746,31 @@ class "__gsoOrbwalker"
                   end
                   return false
             end
-            
+
             -- reset attack
             if self.ResetAttack then
                   return true
             end
-            
+
             -- server timers
             local menuAnim = gsoSDK.Menu.orb.animdelay:Value() * 0.001
             if GameTimer() < self.AttackStartTime + myHero.attackData.animationTime + menuAnim - 0.15 - gsoSDK.Utilities:GetMaxLatency() then
                   return false
             end
-            
+
             -- success
             return true
       end
-      
+
       -- CAN MOVE
       function __gsoOrbwalker:CanMove()
-            
+
             -- get can move from function
             if not self.CanMoveC() then return false end
-            
+
             -- spell windups
             if not gsoSDK.Spell:CheckSpellDelays(self.SpellMoveDelays) then return false end
-            
+
             -- waiting for response from server
             if self.AttackServerStart < self.AttackLocalStart then
                   -- timeout
@@ -780,18 +780,18 @@ class "__gsoOrbwalker"
                   end
                   return false
             end
-            
+
             -- server timers
             local menuWindUp = gsoSDK.Menu.orb.windupdelay:Value() * 0.001
             local userLatency = gsoSDK.Utilities:GetUserLatency()
             if GameTimer() < self.AttackCastEndTime + menuWindUp - userLatency then
                   return false
             end
-            
+
             -- success
             return true
       end
-      
+
       -- ATTACK MOVE
       function __gsoOrbwalker:AttackMove(unit)
             if self.AttackEnabled and unit and unit.pos:ToScreen().onScreen and self:CanAttack() then
@@ -829,36 +829,36 @@ class "__gsoOrbwalker"
                   end
             end
       end
-      
+
       -- ON TICK
       function __gsoOrbwalker:Tick()
-            
+
             -- check if loaded
             if not self.Loaded and GameTimer() > self.LoadTime + 2.5 then
                   self.Loaded = true
             end
             if not self.Loaded then return end
-            
+
             -- unload other orbwalkers
             if _G.Orbwalker.Enabled:Value() then _G.Orbwalker.Enabled:Value(false) end
             if _G.SDK and _G.SDK.Orbwalker and _G.SDK.Orbwalker.Loaded and _G.SDK.Orbwalker.Menu.Enabled:Value() then _G.SDK.Orbwalker.Menu.Enabled:Value(false) end
             if self.IsTeemo then self.IsBlindedByTeemo = self:CheckTeemoBlind() end
-            
+
             -- server attack timers
             local meAAData = myHero.attackData
             if meAAData.endTime > self.AttackEndTime then
-                  
+
                   -- on attack
                   for i = 1, #self.OnAttackC do
                         self.OnAttackC[i]()
                   end
-                  
+
                   -- set attack timers
                   self.AttackStartTime = meAAData.endTime - meAAData.animationTime
                   self.AttackServerStart = GameTimer()
                   self.AttackEndTime = meAAData.endTime
                   self.AttackCastEndTime = meAAData.endTime - meAAData.windDownTime
-                  
+
                   -- debug
                   if gsoSDK.Menu.orb.enabled:Value() then
                         if self.TestCount == 0 then
@@ -872,7 +872,7 @@ class "__gsoOrbwalker"
                         end
                   end
             end
-            
+
             -- cursor not ready, chat open, is evading
             local isEvading = ExtLibEvade and ExtLibEvade.Evading
             if not gsoSDK.Cursor:IsCursorReady() or GameIsChatOpen() or isEvading then
@@ -907,9 +907,9 @@ class "__gsoOrbwalker"
             end
       end
 --[[
-▒█▀▀▀█ █▀▀█ █▀▀ █░░ █░░ 
-░▀▀▀▄▄ █░░█ █▀▀ █░░ █░░ 
-▒█▄▄▄█ █▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ 
+▒█▀▀▀█ █▀▀█ █▀▀ █░░ █░░
+░▀▀▀▄▄ █░░█ █▀▀ █░░ █░░
+▒█▄▄▄█ █▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀
 ]]
 class "__gsoSpell"
       function __gsoSpell:__init()
@@ -1100,7 +1100,7 @@ class "__gsoSpell"
                   local sourceMagicPenPercent = myHero.magicPenPercent
                   local magicResistLeft = 0
                   magicResistLeft = targetBaseMagicResist + targetBonusMagicResist
-                  if magicResistLeft < 0 then 
+                  if magicResistLeft < 0 then
                         dmg = dmg * (2 - (100 / (100 - magicResistLeft)))
                   elseif magicResistLeft >= 0 then
                         if sourceMagicPenPercent > 0 then --  make sure it dont will calculate magicResist = 0 (tested ingame and myHero.magicPenPercent was always 0, should be 1)
@@ -1113,7 +1113,7 @@ class "__gsoSpell"
                         elseif magicResistLeft >= 0 then
                               dmg = dmg * (100 / (100 + magicResistLeft))
                         end
-                  end	
+                  end
             else
                   local targetBaseArmor = unit.armor - unit.bonusArmor
                   local targetBonusArmor = unit.bonusArmor
@@ -1126,11 +1126,11 @@ class "__gsoSpell"
                   if armorLeft < 0 then
                         dmg = dmg * (2 - (100 / (100 - armorLeft)))
                   elseif armorLeft >= 0 then
-                        if sourceArmorPenPercent > 0 then -- make sure it dont will calculate armor = 0 
+                        if sourceArmorPenPercent > 0 then -- make sure it dont will calculate armor = 0
                               targetBaseArmor = targetBaseArmor * sourceArmorPenPercent
                               targetBonusArmor = targetBonusArmor * sourceArmorPenPercent
                         end
-                        if sourceBonusArmorPenPercent > 0 then --  make sure it dont will calculate armor = 0 
+                        if sourceBonusArmorPenPercent > 0 then --  make sure it dont will calculate armor = 0
                               targetBonusArmor = targetBonusArmor * sourceBonusArmorPenPercent
                         end
                         armorLeft = targetBaseArmor + targetBonusArmor - (sourceArmorPen * (0.6 + (0.4 * myHerolevel * 0.0555555)))-- * 0.055555 entspricht /18, Formel für FlatDmgPen von Lethality
@@ -1148,10 +1148,10 @@ class "__gsoSpell"
             if not unit then assert(false, "[234] CalculateDmg: unit is nil !") end
             if dmgType == "ad" and spellData.dmgAD then
                   local dmgAD = spellData.dmgAD - unit.shieldAD
-                  return dmgAD < 0 and 0 or self:ReducedDmg(unit, dmgAD, false) 
+                  return dmgAD < 0 and 0 or self:ReducedDmg(unit, dmgAD, false)
             elseif dmgType == "ap" and spellData.dmgAP then
                   local dmgAP = spellData.dmgAP - unit.shieldAD - unit.shieldAP
-                  return dmgAP < 0 and 0 or self:ReducedDmg(unit, dmgAP, true) 
+                  return dmgAP < 0 and 0 or self:ReducedDmg(unit, dmgAP, true)
             elseif dmgType == "true" and spellData.dmgTrue then
                   return spellData.dmgTrue - unit.shieldAD
             elseif dmgType == "mixed" and spellData.dmgAD and spellData.dmgAP then
@@ -1383,7 +1383,7 @@ class "__gsoSpell"
             end
             return false
       end
-      
+
       -- Prediction: IsCollision
       function __gsoSpell:IsCollision(unit, spellData)
             if unit:GetCollision(spellData.radius, spellData.speed, spellData.delay) > 0 or gsoSDK.Spell:IsMinionCollision(unit, spellData) or gsoSDK.Spell:IsMinionCollision(unit, spellData, true) then
@@ -1391,7 +1391,7 @@ class "__gsoSpell"
             end
             return false
       end
-      
+
       function __gsoSpell:CastSpell(spell, unit, from, spellData, HitChance)
             local result = false
             if not unit then
@@ -1683,9 +1683,9 @@ class "__gsoSpell"
             end
       end
 --[[
-▀▀█▀▀ █▀▀█ █▀▀█ █▀▀▀ █▀▀ ▀▀█▀▀ 　 ▒█▀▀▀█ █▀▀ █░░ █▀▀ █▀▀ ▀▀█▀▀ █▀▀█ █▀▀█ 
-░▒█░░ █▄▄█ █▄▄▀ █░▀█ █▀▀ ░░█░░ 　 ░▀▀▀▄▄ █▀▀ █░░ █▀▀ █░░ ░░█░░ █░░█ █▄▄▀ 
-░▒█░░ ▀░░▀ ▀░▀▀ ▀▀▀▀ ▀▀▀ ░░▀░░ 　 ▒█▄▄▄█ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ░░▀░░ ▀▀▀▀ ▀░▀▀ 
+▀▀█▀▀ █▀▀█ █▀▀█ █▀▀▀ █▀▀ ▀▀█▀▀ 　 ▒█▀▀▀█ █▀▀ █░░ █▀▀ █▀▀ ▀▀█▀▀ █▀▀█ █▀▀█
+░▒█░░ █▄▄█ █▄▄▀ █░▀█ █▀▀ ░░█░░ 　 ░▀▀▀▄▄ █▀▀ █░░ █▀▀ █░░ ░░█░░ █░░█ █▄▄▀
+░▒█░░ ▀░░▀ ▀░▀▀ ▀▀▀▀ ▀▀▀ ░░▀░░ 　 ▒█▄▄▄█ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ░░▀░░ ▀▀▀▀ ▀░▀▀
 ]]
 class "__gsoTS"
       function __gsoTS:__init()
@@ -1918,9 +1918,9 @@ class "__gsoTS"
             end
       end
 --[[
-▒█░▒█ ▀▀█▀▀ ▀█▀ ▒█░░░ ▀█▀ ▀▀█▀▀ ▀█▀ ▒█▀▀▀ ▒█▀▀▀█ 
-▒█░▒█ ░▒█░░ ▒█░ ▒█░░░ ▒█░ ░▒█░░ ▒█░ ▒█▀▀▀ ░▀▀▀▄▄ 
-░▀▄▄▀ ░▒█░░ ▄█▄ ▒█▄▄█ ▄█▄ ░▒█░░ ▄█▄ ▒█▄▄▄ ▒█▄▄▄█ 
+▒█░▒█ ▀▀█▀▀ ▀█▀ ▒█░░░ ▀█▀ ▀▀█▀▀ ▀█▀ ▒█▀▀▀ ▒█▀▀▀█
+▒█░▒█ ░▒█░░ ▒█░ ▒█░░░ ▒█░ ░▒█░░ ▒█░ ▒█▀▀▀ ░▀▀▀▄▄
+░▀▄▄▀ ░▒█░░ ▄█▄ ▒█▄▄█ ▄█▄ ░▒█░░ ▄█▄ ▒█▄▄▄ ▒█▄▄▄█
 ]]
 class "__gsoUtilities"
       function __gsoUtilities:__init()
@@ -1984,9 +1984,9 @@ class "__gsoUtilities"
             return self.Min
       end
 --[[
-▒█░░░ ▒█▀▀▀█ ░█▀▀█ ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ 
-▒█░░░ ▒█░░▒█ ▒█▄▄█ ▒█░▒█ ▒█▀▀▀ ▒█▄▄▀ 
-▒█▄▄█ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▀ ▒█▄▄▄ ▒█░▒█ 
+▒█░░░ ▒█▀▀▀█ ░█▀▀█ ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█
+▒█░░░ ▒█░░▒█ ▒█▄▄█ ▒█░▒█ ▒█▀▀▀ ▒█▄▄▀
+▒█▄▄█ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▀ ▒█▄▄▄ ▒█░▒█
 ]]
 class "__gsoLoader"
       function __gsoLoader:__init()
@@ -2040,9 +2040,9 @@ class "__gsoLoader"
             end)
       end
 --[[
-▀▀█▀▀ ▒█░░▒█ ▀█▀ ▀▀█▀▀ ▒█▀▀█ ▒█░▒█ 
-░▒█░░ ▒█▒█▒█ ▒█░ ░▒█░░ ▒█░░░ ▒█▀▀█ 
-░▒█░░ ▒█▄▀▄█ ▄█▄ ░▒█░░ ▒█▄▄█ ▒█░▒█ 
+▀▀█▀▀ ▒█░░▒█ ▀█▀ ▀▀█▀▀ ▒█▀▀█ ▒█░▒█
+░▒█░░ ▒█▒█▒█ ▒█░ ░▒█░░ ▒█░░░ ▒█▀▀█
+░▒█░░ ▒█▄▀▄█ ▄█▄ ░▒█░░ ▒█▄▄█ ▒█░▒█
 ]]
 class "__gsoTwitch"
       function __gsoTwitch:__init()
@@ -2293,9 +2293,9 @@ class "__gsoTwitch"
             end
       end
 --[[
-▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▀ ░█▀▀█ ▒█░░░ 
-▒█▀▀▀ ░▄▄▄▀▀ ▒█▄▄▀ ▒█▀▀▀ ▒█▄▄█ ▒█░░░ 
-▒█▄▄▄ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▄ ▒█░▒█ ▒█▄▄█ 
+▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▀ ░█▀▀█ ▒█░░░
+▒█▀▀▀ ░▄▄▄▀▀ ▒█▄▄▀ ▒█▀▀▀ ▒█▄▄█ ▒█░░░
+▒█▄▄▄ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▄ ▒█░▒█ ▒█▄▄█
 ]]
 class "__gsoEzreal"
       function __gsoEzreal:__init()
@@ -2354,9 +2354,9 @@ class "__gsoEzreal"
                         local posX = isCustom and gsoSDK.Menu.gsodraw.autoq.posX:Value() or mePos.x - 50
                         local posY = isCustom and gsoSDK.Menu.gsodraw.autoq.posY:Value() or mePos.y
                         if gsoSDK.Menu.autoq.enable:Value() then
-                              DrawText("Auto Q Enabled", gsoSDK.Menu.gsodraw.autoq.size:Value(), posX, posY, DrawColor(255, 000, 255, 000)) 
+                              DrawText("Auto Q Enabled", gsoSDK.Menu.gsodraw.autoq.size:Value(), posX, posY, DrawColor(255, 000, 255, 000))
                         else
-                              DrawText("Auto Q Disabled", gsoSDK.Menu.gsodraw.autoq.size:Value(), posX, posY, DrawColor(255, 255, 000, 000)) 
+                              DrawText("Auto Q Disabled", gsoSDK.Menu.gsodraw.autoq.size:Value(), posX, posY, DrawColor(255, 255, 000, 000))
                         end
                   end
             end
@@ -2509,9 +2509,9 @@ class "__gsoEzreal"
       end
       -- END -> farm
 --[[
-▒█░▄▀ ▒█▀▀▀█ ▒█▀▀█ 　 ▒█▀▄▀█ ░█▀▀█ ▒█░░▒█ 
-▒█▀▄░ ▒█░░▒█ ▒█░▄▄ 　 ▒█▒█▒█ ▒█▄▄█ ▒█▒█▒█ 
-▒█░▒█ ▒█▄▄▄█ ▒█▄▄█ 　 ▒█░░▒█ ▒█░▒█ ▒█▄▀▄█ 
+▒█░▄▀ ▒█▀▀▀█ ▒█▀▀█ 　 ▒█▀▄▀█ ░█▀▀█ ▒█░░▒█
+▒█▀▄░ ▒█░░▒█ ▒█░▄▄ 　 ▒█▒█▒█ ▒█▄▄█ ▒█▒█▒█
+▒█░▒█ ▒█▄▄▄█ ▒█▄▄█ 　 ▒█░░▒█ ▒█░▒█ ▒█▄▀▄█
 ]]
 class "__gsoKogMaw"
       function __gsoKogMaw:__init()
@@ -2727,9 +2727,9 @@ class "__gsoKogMaw"
             end
       end
 --[[
-▒█░░▒█ ░█▀▀█ ▒█▀▀█ ▒█░▒█ ▒█▀▀▀█ 
-░▒█▒█░ ▒█▄▄█ ▒█▄▄▀ ▒█░▒█ ░▀▀▀▄▄ 
-░░▀▄▀░ ▒█░▒█ ▒█░▒█ ░▀▄▄▀ ▒█▄▄▄█ 
+▒█░░▒█ ░█▀▀█ ▒█▀▀█ ▒█░▒█ ▒█▀▀▀█
+░▒█▒█░ ▒█▄▄█ ▒█▄▄▀ ▒█░▒█ ░▀▀▀▄▄
+░░▀▄▀░ ▒█░▒█ ▒█░▒█ ░▀▄▄▀ ▒█▄▄▄█
 ]]
 class "__gsoVarus"
       function __gsoVarus:__init()
@@ -2894,9 +2894,9 @@ class "__gsoVarus"
             end
       end
 --[[
-▒█▀▀█ ▒█▀▀█ ░█▀▀█ ▒█▄░▒█ ▒█▀▀▄ 
-▒█▀▀▄ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█░▒█ 
-▒█▄▄█ ▒█░▒█ ▒█░▒█ ▒█░░▀█ ▒█▄▄▀ 
+▒█▀▀█ ▒█▀▀█ ░█▀▀█ ▒█▄░▒█ ▒█▀▀▄
+▒█▀▀▄ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█░▒█
+▒█▄▄█ ▒█░▒█ ▒█░▒█ ▒█░░▀█ ▒█▄▄▀
 ]]
 class "__gsoBrand"
       function __gsoBrand:__init()
@@ -3115,7 +3115,7 @@ class "__gsoBrand"
                                     self.ETarget = eTarget
                                     return
                               end
-                              if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastWk + 1.33 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
+                              if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastWk + 1.33 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then
                                     eTarget = gsoSDK.TS:GetTarget(enemyList, true)
                                     if eTarget and gsoSDK.Spell:CastSpell(HK_E, eTarget) then
                                           self.ETarget = eTarget
@@ -3212,7 +3212,7 @@ class "__gsoBrand"
                               if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.comhar.hitchance:Value()) then
                                     return
                               end
-                              if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
+                              if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then
                                     local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(950, false, "spell")
                                     local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
                                     if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.comhar.hitchance:Value()) then
@@ -3234,7 +3234,7 @@ class "__gsoBrand"
                                     if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.auto.hitchance:Value()) then
                                           return
                                     end
-                                    if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then 
+                                    if GameTimer() > gsoSDK.Spell.LastQk + 0.77 and GameTimer() > gsoSDK.Spell.LastEk + 0.77 and GameTimer() > gsoSDK.Spell.LastRk + 0.77 then
                                           local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1200 - (i * 100), false, "spell")
                                           local wTarget = gsoSDK.TS:GetTarget(enemyList, true)
                                           if wTarget and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.wData, gsoSDK.Menu.wset.auto.hitchance:Value()) then
@@ -3287,9 +3287,9 @@ class "__gsoBrand"
             end
       end
 --[[
-▒█▀▄▀█ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ░█▀▀█ ▒█▄░▒█ ░█▀▀█ 
-▒█▒█▒█ ▒█░░▒█ ▒█▄▄▀ ▒█░▄▄ ▒█▄▄█ ▒█▒█▒█ ▒█▄▄█ 
-▒█░░▒█ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄█ ▒█░▒█ ▒█░░▀█ ▒█░▒█ 
+▒█▀▄▀█ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ░█▀▀█ ▒█▄░▒█ ░█▀▀█
+▒█▒█▒█ ▒█░░▒█ ▒█▄▄▀ ▒█░▄▄ ▒█▄▄█ ▒█▒█▒█ ▒█▄▄█
+▒█░░▒█ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄█ ▒█░▒█ ▒█░░▀█ ▒█░▒█
 ]]
 class "__gsoMorgana"
       function __gsoMorgana:__init()
@@ -3317,7 +3317,11 @@ class "__gsoMorgana"
             end)
       end
       function __gsoMorgana:SetSpellData()
-            self.qData = { delay = 0.25, radius = 80, range = 1175, speed = myHero:GetSpellData(_Q).speed, collision = true, sType = "line" }
+            self.qData = { delay = 0.25, radius = myHero:GetSpellData(_Q).width, range = myHero:GetSpellData(_Q).range, speed = myHero:GetSpellData(_Q).speed, collision = true, sType = "line" }
+            self.wData = { delay = 0.25, radius = myHero:GetSpellData(_W).width, range = myHero:GetSpellData(_W).range, speed = myHero:GetSpellData(_W).speed}
+            self.eData = { delay = 0.25, radius = myHero:GetSpellData(_E).width, range = myHero:GetSpellData(_E).range, speed = myHero:GetSpellData(_E).speed}
+            self.rData = { delay = 0.25, radius = myHero:GetSpellData(_R).width, range = myHero:GetSpellData(_R).range, speed = myHero:GetSpellData(_R).speed}
+
       end
       function __gsoMorgana:CreateMenu()
             -- Q
@@ -3346,18 +3350,37 @@ class "__gsoMorgana"
                   gsoSDK.Menu.qset.comhar:MenuElement({id = "hitchance", name = "Hitchance", value = 2, drop = { "normal", "high" } })
             -- W
             gsoSDK.Menu:MenuElement({name = "W settings", id = "wset", type = MENU })
-                  gsoSDK.Menu.wset:MenuElement({id = "slow", name = "Slow", value = false})
-                  gsoSDK.Menu.wset:MenuElement({id = "immobile", name = "Immobile", value = true})
-                  gsoSDK.Menu.wset:MenuElement({id = "time", name = "Minimum milliseconds", value = 500, min = 250, max = 2000, step = 50})
+                  -- KS
+                  gsoSDK.Menu.wset:MenuElement({name = "KS", id = "killsteal", type = MENU })
+                        gsoSDK.Menu.wset.killsteal:MenuElement({id = "enabled", name = "Enabled", value = false})
+                        gsoSDK.Menu.wset.killsteal:MenuElement({id = "minhp", name = "minimum enemy hp", value = 200, min = 1, max = 300, step = 1})
+                  -- Auto
+                  gsoSDK.Menu.wset:MenuElement({name = "Auto", id = "auto", type = MENU })
+                        gsoSDK.Menu.wset.auto:MenuElement({id = "enabled", name = "Enabled", value = true})
+                        gsoSDK.Menu.wset.auto:MenuElement({id = "slow", name = "Slow", value = false})
+                        gsoSDK.Menu.wset.auto:MenuElement({id = "immobile", name = "Immobile", value = true})
+                        gsoSDK.Menu.wset.auto:MenuElement({id = "time", name = "Minimum milliseconds", value = 500, min = 250, max = 2000, step = 50})
+                  -- Combo / Harass
+                  gsoSDK.Menu.wset:MenuElement({name = "Combo / Harass", id = "comhar", type = MENU })
+                        gsoSDK.Menu.wset.comhar:MenuElement({id = "combo", name = "Use W Combo", value = true})
+                        gsoSDK.Menu.wset.comhar:MenuElement({id = "harass", name = "Use W Harass", value = false})
+                  -- Clear
+                  gsoSDK.Menu.wset:MenuElement({name = "Clear", id = "clear", type = MENU })
+                        gsoSDK.Menu.wset.clear:MenuElement({id = "enabled", name = "Enbaled", value = true})
+                        gsoSDK.Menu.wset.clear:MenuElement({id = "xminions", name = "Min minions W Clear", value = 3, min = 1, max = 5, step = 1})
             -- E
             gsoSDK.Menu:MenuElement({name = "E settings", id = "eset", type = MENU })
-                  gsoSDK.Menu.eset:MenuElement({id = "ally", name = "Use on ally", value = true})
+                  -- Auto
+                  gsoSDK.Menu.eset:MenuElement({name = "Auto", id = "auto", type = MENU })
+                        gsoSDK.Menu.eset.auto:MenuElement({id = "enabled", name = "Enabled", value = true})
+                        gsoSDK.Menu.eset.auto:MenuElement({id = "ally", name = "Use on ally", value = true})
+                        gsoSDK.Menu.eset.auto:MenuElement({id = "selfish", name = "Use on yourself", value = true})
             --R
             gsoSDK.Menu:MenuElement({name = "R settings", id = "rset", type = MENU })
                   -- KS
                   gsoSDK.Menu.rset:MenuElement({name = "KS", id = "killsteal", type = MENU })
                         gsoSDK.Menu.rset.killsteal:MenuElement({id = "enabled", name = "Enabled", value = false})
-                        gsoSDK.Menu.rset.killsteal:MenuElement({id = "minhp", name = "minimum enemy hp", value = 200, min = 1, max = 300, step = 1})
+                        gsoSDK.Menu.rset.killsteal:MenuElement({id = "minhp", name = "Minimum enemy hp", value = 200, min = 1, max = 300, step = 1})
                   -- Auto
                   gsoSDK.Menu.rset:MenuElement({name = "Auto", id = "auto", type = MENU })
                         gsoSDK.Menu.rset.auto:MenuElement({id = "enabled", name = "Enabled", value = true})
@@ -3370,6 +3393,36 @@ class "__gsoMorgana"
                         gsoSDK.Menu.rset.comhar:MenuElement({id = "xenemies", name = ">= X enemies near morgana", value = 2, min = 1, max = 4, step = 1})
                         gsoSDK.Menu.rset.comhar:MenuElement({id = "xrange", name = "< X distance enemies to morgana", value = 300, min = 100, max = 550, step = 50})
       end
+      -- Internal Function
+      function isValidTarget(obj, range)
+            range = range and range or math.huge
+            return obj ~= nil and obj.valid and obj.visible and not obj.dead and obj.isTargetable and not obj.isImmortal and obj.distance <= range
+      end
+      function CountObjectsNearPos(pos, range, radius, objects)
+            local n = 0
+            for i, object in pairs(objects) do
+                if GetFastDistance(pos, object.pos) <= radius * radius then
+                    n = n + 1
+                end
+            end
+            return n
+      end
+      function GetBestCircularFarmPosition(range, radius, objects)
+            local BestPos 
+            local BestHit = 0
+            for i, object in pairs(objects) do
+                local hit = CountObjectsNearPos(object.pos, range, radius, objects)
+                if hit > BestHit then
+                    BestHit = hit
+                    BestPos = object.pos
+                    if BestHit == #objects then
+                       break
+                    end
+                 end
+            end
+            return BestPos, BestHit
+      end
+      -- End Internal Function
       function __gsoMorgana:AddTickEvent()
             gsoSDK.ChampTick = function()
                   -- Is Attacking
@@ -3388,7 +3441,7 @@ class "__gsoMorgana"
                               local qDmg = baseDmg + lvlDmg + apDmg
                               local minHP = gsoSDK.Menu.qset.killsteal.minhp:Value()
                               if qDmg > minHP then
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1175, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.qData.range, false, "spell")
                                     for i = 1, #enemyList do
                                           local qTarget = enemyList[i]
                                           if qTarget.health > minHP and qTarget.health < gsoSDK.Spell:CalculateDmg(qTarget, { dmgType = "ap", dmgAP = qDmg }) and gsoSDK.Spell:CastSpell(HK_Q, qTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.killsteal.hitchance:Value()) then
@@ -3401,7 +3454,7 @@ class "__gsoMorgana"
                         if (mode == "Combo" and gsoSDK.Menu.qset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.qset.comhar.harass:Value()) then
                               local qList = {}
                               local skipCollision = gsoSDK.Menu.qset.comhar.collision:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1175, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.qData.range, false, "spell")
                               for i = 1, #enemyList do
                                     local hero = enemyList[i]
                                     local heroName = hero.charName
@@ -3419,7 +3472,7 @@ class "__gsoMorgana"
                         elseif gsoSDK.Menu.qset.auto.enabled:Value() then
                               local qList = {}
                               local skipCollision = gsoSDK.Menu.qset.auto.collision:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(1175, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.qData.range, false, "spell")
                               for i = 1, #enemyList do
                                     local hero = enemyList[i]
                                     local heroName = hero.charName
@@ -3437,40 +3490,95 @@ class "__gsoMorgana"
                   end
                   -- W
                   if gsoSDK.Spell:IsReady(_W, { q = 0.33, w = 0.5, e = 0.33, r = 0.33 } ) then
-                        local mSlow = gsoSDK.Menu.wset.slow:Value()
-                        local mImmobile = gsoSDK.Menu.wset.immobile:Value()
-                        local mTime = gsoSDK.Menu.wset.time:Value() * 0.001
-                        if mSlow or mImmobile then
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(900, false, "spell")
+                        -- KS
+                        if gsoSDK.Menu.wset.killsteal.enabled:Value() then
+                              local baseDmg = 10
+                              local lvlDmg = 14 * myHero:GetSpellData(_W).level
+                              local apDmg = myHero.ap * 0.22
+                              local wDmg = baseDmg + lvlDmg + apDmg
+                              local minHP = gsoSDK.Menu.wset.killsteal.minhp:Value()
+                              if wDmg > minHP then
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.qData.range, false, "spell")
+                                    for i = 1, #enemyList do
+                                          local wTarget = enemyList[i]
+                                          if wTarget.health > minHP and wTarget.health < gsoSDK.Spell:CalculateDmg(wTarget, { dmgType = "ap", dmgAP = wDmg }) and gsoSDK.Spell:CastSpell(HK_W, wTarget, myHero.pos, self.qData, gsoSDK.Menu.qset.killsteal.hitchance:Value()) then
+                                                return
+                                          end
+                                    end
+                              end
+                        end
+                        -- Combo / Harass
+                        if (mode == "Combo" and gsoSDK.Menu.wset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.wset.comhar.harass:Value()) then
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.wData.range, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
-                                    local canW = (mImmobile and gsoSDK.Spell:IsImmobile(unit, mTime)) or (mSlow and gsoSDK.Spell:IsSlowed(unit, mTime))
-                                    if canW and gsoSDK.Spell:CastSpell(HK_W, unit) then
+                                    if gsoSDK.Spell:CastSpell(HK_W, unit) then
+                                           return
+                                    end
+                              end
+                        end
+                        -- Clear
+                        if (mode == "Clear" and gsoSDK.Menu.wset.clear.enabled:Value())then
+                              local eMinions = {}
+                              local mobs = {}   
+                              for i = 1, Game.MinionCount() do
+                                    local minion = Game.Minion(i)
+                                    if  isValidTarget(minion, self.wData.range)  then
+                                          if minion.team == 300 then
+                                                mobs[#mobs+1] = minion
+                                          elseif minion.isEnemy  then
+                                                eMinions[#eMinions+1] = minion
+                                          end	
+                                    end
+                              end
+                              local BestPos, BestHit = GetBestCircularFarmPosition(self.wData.range, self.wData.radius, eMinions)
+                              if BestHit >= gsoSDK.Menu.wset.clear.xminions:Value() then
+                                    if Control.CastSpell(HK_W, BestPos) then
                                           return
+                                    end
+                              end
+                        end
+                        -- Auto
+                        if gsoSDK.Menu.wset.auto.enabled:Value() then
+                              local mSlow = gsoSDK.Menu.wset.auto.slow:Value()
+                              local mImmobile = gsoSDK.Menu.wset.auto.immobile:Value()
+                              local mTime = gsoSDK.Menu.wset.auto.time:Value() * 0.001
+                              if mSlow or mImmobile then
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.wData.range, false, "spell")
+                                    for i = 1, #enemyList do
+                                          local unit = enemyList[i]
+                                          local canW = (mImmobile and gsoSDK.Spell:IsImmobile(unit, mTime)) or (mSlow and gsoSDK.Spell:IsSlowed(unit, mTime))
+                                          if canW and gsoSDK.Spell:CastSpell(HK_W, unit) then
+                                                return
+                                          end
                                     end
                               end
                         end
                   end
                   -- E
-				  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
-				  	for i = 1, GameHeroCount() do
-						local hero = Game.Hero(i)
-						if hero and hero.isEnemy and hero.activeSpell.valid and hero.isChanneling then
-							local currSpell = hero.activeSpell
-							local spellPos = Vector(currSpell.placementPos.x, currSpell.placementPos.y, currSpell.placementPos.z)
-							for i = 1, Game.HeroCount() do
-								local ally = Game.Hero(i)
-								if ally and ((ally.isAlly and gsoSDK.Menu.eset.ally:Value()) or ally == myHero) then
-									if (ally.pos:DistanceTo(spellPos) < currSpell.width + (ally.boundingRadius * 1.5)) or currSpell.target == ally.handle then
-										if Control.CastSpell(HK_E, ally) then
-											return
-										end										
+                  if gsoSDK.Spell:IsReady(_E, { q = 0.33, w = 0.33, e = 0.5, r = 0.33 } ) then
+                        -- Auto
+                        if gsoSDK.Menu.eset.auto.enabled:Value() then
+				      for i = 1, GameHeroCount() do
+					      local hero = Game.Hero(i)
+					      if hero and hero.isEnemy and hero.activeSpell.valid and hero.isChanneling then
+						      local currSpell = hero.activeSpell
+						      local spellPos = Vector(currSpell.placementPos.x, currSpell.placementPos.y, currSpell.placementPos.z)
+						      for i = 1, Game.HeroCount() do
+							      local ally = Game.Hero(i)
+							      if ally and ((ally.isAlly and ally ~= myHero and gsoSDK.Menu.eset.auto.ally:Value()) or (ally == myHero) and gsoSDK.Menu.eset.auto.selfish:Value()) then
+                                                      if (ally.pos:DistanceTo(myHero.pos) < self.eData.range and ally.pos:DistanceTo(spellPos) < currSpell.width + (ally.boundingRadius * 1.5)) or currSpell.target == ally.handle then
+                                                            print(ally.pos:DistanceTo(spellPos))
+									      if Control.CastSpell(HK_E, ally) then
+                                                                  return
+                                                            end
 									end
 								end
 							end
 						end
 					end
-				  end
+				end
+			end
                   -- R
                   if gsoSDK.Spell:IsReady(_R, { q = 0.33, w = 0.33, e = 0.33, r = 0.5 } ) then
                         -- KS
@@ -3481,7 +3589,7 @@ class "__gsoMorgana"
                               local rDmg = baseDmg + lvlDmg + apDmg
                               local minHP = gsoSDK.Menu.rset.killsteal.minhp:Value()
                               if rDmg > minHP then
-                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
+                                    local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.rData.range, false, "spell")
                                     for i = 1, #enemyList do
                                           local rTarget = enemyList[i]
                                           if rTarget.health > minHP and rTarget.health < gsoSDK.Spell:CalculateDmg(rTarget, { dmgType = "ap", dmgAP = rDmg }) and gsoSDK.Spell:CastSpell(HK_R) then
@@ -3494,7 +3602,7 @@ class "__gsoMorgana"
                         if (mode == "Combo" and gsoSDK.Menu.rset.comhar.combo:Value()) or (mode == "Harass" and gsoSDK.Menu.rset.comhar.harass:Value()) then
                               local count = 0
                               local xRange = gsoSDK.Menu.rset.comhar.xrange:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.rData.range, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if unit.pos:DistanceTo(myHero.pos) < xRange then
@@ -3504,11 +3612,12 @@ class "__gsoMorgana"
                               if count >= gsoSDK.Menu.rset.comhar.xenemies:Value() and gsoSDK.Spell:CastSpell(HK_R) then
                                     return
                               end
+                        end
                         -- Auto
-                        elseif gsoSDK.Menu.rset.auto.enabled:Value() then
+                        if gsoSDK.Menu.rset.auto.enabled:Value() then
                               local count = 0
                               local xRange = gsoSDK.Menu.rset.auto.xrange:Value()
-                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(625, false, "spell")
+                              local enemyList = gsoSDK.ObjectManager:GetEnemyHeroes(self.rData.range, false, "spell")
                               for i = 1, #enemyList do
                                     local unit = enemyList[i]
                                     if unit.pos:DistanceTo(myHero.pos) < xRange then
@@ -3522,10 +3631,11 @@ class "__gsoMorgana"
                   end
             end
       end
+
 --[[
-▒█░▄▀ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ▒█░▒█ ▒█▀▀▀█ 
-▒█▀▄░ ▒█▄▄█ ▒█▄▄▀ ░▒█░░ ▒█▀▀█ ▒█░▒█ ░▀▀▀▄▄ 
-▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄▄█ 
+▒█░▄▀ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ▒█░▒█ ▒█▀▀▀█
+▒█▀▄░ ▒█▄▄█ ▒█▄▄▀ ░▒█░░ ▒█▀▀█ ▒█░▒█ ░▀▀▀▄▄
+▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄▄█
 ]]
 class "__gsoKarthus"
 
@@ -3552,12 +3662,12 @@ class "__gsoKarthus"
                   return true
             end)
       end
-      
+
       function __gsoKarthus:SetSpellData()
             self.qData = { delay = 0.625, radius = 75, range = 900, speed = math.huge, collision = false, sType = "circular" }
             self.wData = { delay = 0.25, radius = 0, range = 1000, speed = math.huge, collision = false, sType = "line" }
       end
-      
+
       function __gsoKarthus:CreateMenu()
             -- Q
             gsoSDK.Menu:MenuElement({name = "Q settings", id = "qset", type = MENU })
@@ -3633,9 +3743,9 @@ class "__gsoKarthus"
                         local posX = mePos.x - 50
                         local posY = mePos.y
                         if rCount > 0 then
-                              DrawText("Kill Count: "..rCount, gsoSDK.Menu.gsodraw.ksdraw.size:Value(), posX, posY, DrawColor(255, 000, 255, 000)) 
+                              DrawText("Kill Count: "..rCount, gsoSDK.Menu.gsodraw.ksdraw.size:Value(), posX, posY, DrawColor(255, 000, 255, 000))
                         else
-                              DrawText("Kill Count: "..rCount, gsoSDK.Menu.gsodraw.ksdraw.size:Value(), posX, posY, DrawColor(150, 255, 000, 000)) 
+                              DrawText("Kill Count: "..rCount, gsoSDK.Menu.gsodraw.ksdraw.size:Value(), posX, posY, DrawColor(150, 255, 000, 000))
                         end
                   end
             end
@@ -3746,9 +3856,9 @@ class "__gsoKarthus"
             end
       end
 --[[
-▒█░░▒█ ░█▀▀█ ▒█░░▒█ ▒█▄░▒█ ▒█▀▀▀ 
-░▒█▒█░ ▒█▄▄█ ▒█▄▄▄█ ▒█▒█▒█ ▒█▀▀▀ 
-░░▀▄▀░ ▒█░▒█ ░░▒█░░ ▒█░░▀█ ▒█▄▄▄ 
+▒█░░▒█ ░█▀▀█ ▒█░░▒█ ▒█▄░▒█ ▒█▀▀▀
+░▒█▒█░ ▒█▄▄█ ▒█▄▄▄█ ▒█▒█▒█ ▒█▀▀▀
+░░▀▄▀░ ▒█░▒█ ░░▒█░░ ▒█░░▀█ ▒█▄▄▄
 ]]
 class "__gsoVayne"
 
@@ -3759,13 +3869,13 @@ class "__gsoVayne"
             gsoSDK.AntiGapcloser = __gsoAntiGapcloser()
             gsoSDK.Interrupter.Callback[#gsoSDK.Interrupter.Callback+1] = function(enemy, activeSpell)
                   if gsoSDK.Menu.eset.auto.interrupt:Value() and gsoSDK.Spell:IsReady(_E, { q = 0.3, w = 0, e = 0.5, r = 0 } ) then
-                        gsoSDK.Spell:CastSpell(HK_E, enemy) 
+                        gsoSDK.Spell:CastSpell(HK_E, enemy)
                   end
             end
             gsoSDK.AntiGapcloser.Callback[#gsoSDK.AntiGapcloser.Callback+1] = function(enemy)
                   local name = enemy.charName
                   if gsoSDK.Menu.eset.auto.antigap:Value() and gsoSDK.Spell:IsReady(_E, { q = 0.3, w = 0, e = 0.5, r = 0 } ) and gsoSDK.Menu.eset.auto.useonanti[name] and gsoSDK.Menu.eset.auto.useonanti[name]:Value() then
-                        gsoSDK.Spell:CastSpell(HK_E, enemy) 
+                        gsoSDK.Spell:CastSpell(HK_E, enemy)
                   end
             end
             -- menu
@@ -3778,11 +3888,11 @@ class "__gsoVayne"
             self:CreateMenu()
             self:AddTickEvent()
       end
-      
+
       function __gsoVayne:SetSpellData()
             self.eData = { delay = 0.5, radius = 0, range = 550 + myHero.boundingRadius + 35, speed = 2000, collision = false, sType = "line" }
       end
-      
+
       function __gsoVayne:CreateMenu()
             -- Q
             gsoSDK.Menu:MenuElement({name = "Q settings", id = "qset", type = MENU })
@@ -3806,7 +3916,7 @@ class "__gsoVayne"
                   gsoSDK.Menu.rset:MenuElement({id = "xcount", name = "  ^^^ X enemies ^^^", value = 3, min = 1, max = 5, step = 1})
                   gsoSDK.Menu.rset:MenuElement({id = "xdistance", name = "^^^ max. distance ^^^", value = 500, min = 250, max = 750, step = 50})
       end
-      
+
       function __gsoVayne:AddTickEvent()
             gsoSDK.ChampTick = function()
                   -- Is Attacking
@@ -3870,9 +3980,9 @@ class "__gsoVayne"
             end
       end
 --[[
-▒█░░░ ▒█░▒█ ▒█▀▀█ ▀█▀ ░█▀▀█ ▒█▄░▒█ 
-▒█░░░ ▒█░▒█ ▒█░░░ ▒█░ ▒█▄▄█ ▒█▒█▒█ 
-▒█▄▄█ ░▀▄▄▀ ▒█▄▄█ ▄█▄ ▒█░▒█ ▒█░░▀█ 
+▒█░░░ ▒█░▒█ ▒█▀▀█ ▀█▀ ░█▀▀█ ▒█▄░▒█
+▒█░░░ ▒█░▒█ ▒█░░░ ▒█░ ▒█▄▄█ ▒█▒█▒█
+▒█▄▄█ ░▀▄▄▀ ▒█▄▄█ ▄█▄ ▒█░▒█ ▒█░░▀█
 ]]
 class "__gsoLucian"
 
@@ -3882,13 +3992,13 @@ class "__gsoLucian"
             gsoSDK.AntiGapcloser = __gsoAntiGapcloser()
             gsoSDK.Interrupter.Callback[#gsoSDK.Interrupter.Callback+1] = function(enemy, activeSpell)
                   if gsoSDK.Menu.eset.auto.interrupt:Value() and gsoSDK.Spell:IsReady(_E, { q = 0.3, w = 0, e = 0.5, r = 0 } ) then
-                        gsoSDK.Spell:CastSpell(HK_E, enemy) 
+                        gsoSDK.Spell:CastSpell(HK_E, enemy)
                   end
             end
             gsoSDK.AntiGapcloser.Callback[#gsoSDK.AntiGapcloser.Callback+1] = function(enemy)
                   local name = enemy.charName
                   if gsoSDK.Menu.eset.auto.antigap:Value() and gsoSDK.Spell:IsReady(_E, { q = 0.3, w = 0, e = 0.5, r = 0 } ) and gsoSDK.Menu.eset.auto.useonanti[name] and gsoSDK.Menu.eset.auto.useonanti[name]:Value() then
-                        gsoSDK.Spell:CastSpell(HK_E, enemy) 
+                        gsoSDK.Spell:CastSpell(HK_E, enemy)
                   end
             end
             -- menu
@@ -3901,11 +4011,11 @@ class "__gsoLucian"
             self:CreateMenu()
             self:AddTickEvent()
       end
-      
+
       function __gsoLucian:SetSpellData()
             self.eData = { delay = 0.5, radius = 0, range = 550 + myHero.boundingRadius + 35, speed = 2000, collision = false, sType = "line" }
       end
-      
+
       function __gsoLucian:CreateMenu()
             -- Q
             gsoSDK.Menu:MenuElement({name = "Q settings", id = "qset", type = MENU })
@@ -3929,7 +4039,7 @@ class "__gsoLucian"
                   gsoSDK.Menu.rset:MenuElement({id = "xcount", name = "  ^^^ X enemies ^^^", value = 3, min = 1, max = 5, step = 1})
                   gsoSDK.Menu.rset:MenuElement({id = "xdistance", name = "^^^ max. distance ^^^", value = 500, min = 250, max = 750, step = 50})
       end
-      
+
       function __gsoLucian:AddTickEvent()
             gsoSDK.ChampTick = function()
                   -- Is Attacking
@@ -3993,9 +4103,9 @@ class "__gsoLucian"
             end
       end
 --[[
-▒█░░░ ▒█▀▀▀█ ░█▀▀█ ▒█▀▀▄ 　 ░█▀▀█ ▒█░░░ ▒█░░░ 
-▒█░░░ ▒█░░▒█ ▒█▄▄█ ▒█░▒█ 　 ▒█▄▄█ ▒█░░░ ▒█░░░ 
-▒█▄▄█ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▀ 　 ▒█░▒█ ▒█▄▄█ ▒█▄▄█ 
+▒█░░░ ▒█▀▀▀█ ░█▀▀█ ▒█▀▀▄ 　 ░█▀▀█ ▒█░░░ ▒█░░░
+▒█░░░ ▒█░░▒█ ▒█▄▄█ ▒█░▒█ 　 ▒█▄▄█ ▒█░░░ ▒█░░░
+▒█▄▄█ ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▀ 　 ▒█░▒█ ▒█▄▄█ ▒█▄▄█
 ]]
 if myHero.charName == "Twitch" then
       __gsoTwitch()
